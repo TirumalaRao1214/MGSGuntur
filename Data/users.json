@@ -1,0 +1,18 @@
+[
+  {
+    "username": "owner",
+    "displayName": "Shop Owner",
+    "role": "Owner",
+    "salt": "A3F9C1E72B8D4056",
+    "passwordHash": "9332d0fbe2d0a4ce75b0a6e27af8ede0f658abd91490480908e3cea2136ef9cb",
+    "isActive": true
+  },
+  {
+    "username": "admin",
+    "displayName": "Administrator",
+    "role": "Admin",
+    "salt": "7B2E4A9F1C6D3081",
+    "passwordHash": "810831335d19b3f6c83ea4e0fed44ad0b73d85cebd6eab64a305285283c5e210",
+    "isActive": true
+  }
+]

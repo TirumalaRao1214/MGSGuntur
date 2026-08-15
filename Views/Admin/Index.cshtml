@@ -1,0 +1,129 @@
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.PageTitle = "Dashboard";
+    var totalProducts  = (int)(ViewBag.TotalProducts  ?? 0);
+    var availableCount = (int)(ViewBag.AvailableCount  ?? 0);
+    var bestSellers    = (int)(ViewBag.BestSellerCount  ?? 0);
+    var categoryCount  = (int)(ViewBag.CategoryCount   ?? 0);
+    var recent = ViewBag.RecentProducts as List<MarwadiGheeSweetsWeb.Models.Product> ?? new();
+}
+
+<div class="row g-3 mb-4">
+    <div class="col-sm-6 col-lg-3">
+        <div class="stat-card">
+            <div class="d-flex align-items-start justify-content-between">
+                <div>
+                    <div class="stat-value">@totalProducts</div>
+                    <div class="stat-label">Total Products</div>
+                </div>
+                <div class="stat-icon">🍬</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        <div class="stat-card">
+            <div class="d-flex align-items-start justify-content-between">
+                <div>
+                    <div class="stat-value" style="color:#16a34a;">@availableCount</div>
+                    <div class="stat-label">Available Now</div>
+                </div>
+                <div class="stat-icon">✅</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        <div class="stat-card">
+            <div class="d-flex align-items-start justify-content-between">
+                <div>
+                    <div class="stat-value" style="color:#b8860b;">@bestSellers</div>
+                    <div class="stat-label">Best Sellers</div>
+                </div>
+                <div class="stat-icon">⭐</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        <div class="stat-card">
+            <div class="d-flex align-items-start justify-content-between">
+                <div>
+                    <div class="stat-value" style="color:#7c3aed;">@categoryCount</div>
+                    <div class="stat-label">Categories</div>
+                </div>
+                <div class="stat-icon">🏷️</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-8">
+        <div class="admin-table">
+            <div class="p-3 border-bottom d-flex align-items-center justify-content-between">
+                <span style="font-weight:700;font-size:14px;">Recent Products</span>
+                <a href="/admin/products" class="btn btn-sm" style="font-size:12px;border:1px solid #e5e7eb;">View All</a>
+            </div>
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var p in recent)
+                    {
+                        <tr>
+                            <td>
+                                <div style="font-weight:600;font-size:13px;">@p.Name</div>
+                                @if (!string.IsNullOrEmpty(p.Badge))
+                                {
+                                    <span class="badge" style="background:#b8860b;font-size:10px;">@p.Badge</span>
+                                }
+                            </td>
+                            <td style="color:#6b7280;">@p.Category</td>
+                            <td>₹@p.BasePrice.ToString("F0")</td>
+                            <td>
+                                @if (p.IsAvailable)
+                                {
+                                    <span class="badge bg-success" style="font-size:10px;">Available</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary" style="font-size:10px;">Hidden</span>
+                                }
+                            </td>
+                            <td>
+                                <a href="/admin/products/edit/@p.Id" class="btn btn-sm" style="font-size:11px;border:1px solid #e5e7eb;">Edit</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="form-card h-100">
+            <div class="section-title">Quick Actions</div>
+            <div class="d-grid gap-2">
+                <a href="/admin/products/create" class="btn btn-sm" style="background:#800020;color:white;padding:10px;">
+                    <i class="bi bi-plus-lg"></i> Add New Product
+                </a>
+                <a href="/admin/categories" class="btn btn-sm" style="background:white;border:1px solid #e5e7eb;padding:10px;">
+                    <i class="bi bi-tags"></i> Manage Categories
+                </a>
+                <a href="/" target="_blank" class="btn btn-sm" style="background:white;border:1px solid #e5e7eb;padding:10px;">
+                    <i class="bi bi-shop"></i> View Storefront
+                </a>
+                @if (User.IsInRole("Owner"))
+                {
+                    <a href="/owner/settings" class="btn btn-sm" style="background:white;border:1px solid #e5e7eb;padding:10px;">
+                        <i class="bi bi-gear"></i> Shop Settings
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+</div>

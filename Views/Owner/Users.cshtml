@@ -1,0 +1,154 @@
+@model MarwadiGheeSweetsWeb.ViewModels.ManageUsersViewModel
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.PageTitle = "Manage Users";
+}
+
+@if (!string.IsNullOrEmpty(Model.SuccessMessage))
+{
+    <div class="alert alert-success d-flex align-items-center gap-2 mb-3">
+        <i class="bi bi-check-circle-fill"></i> @Model.SuccessMessage
+    </div>
+}
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger d-flex align-items-center gap-2 mb-3">
+        <i class="bi bi-exclamation-triangle-fill"></i> @Model.ErrorMessage
+    </div>
+}
+
+<div class="row g-3">
+    <!-- Users table -->
+    <div class="col-lg-8">
+        <div class="admin-table">
+            <div class="p-3 border-bottom" style="font-weight:700;font-size:14px;">
+                All Users <span class="badge" style="background:#e5e7eb;color:#374151;font-size:11px;">@Model.Users.Count</span>
+            </div>
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th style="width:130px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model.Users)
+                    {
+                        var isSelf = user.Username.Equals(User.Identity?.Name, StringComparison.OrdinalIgnoreCase);
+                        <tr>
+                            <td>
+                                <div style="display:flex;align-items:center;gap:10px;">
+                                    <div style="width:34px;height:34px;border-radius:50%;background:#800020;color:white;
+                                                display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">
+                                        @user.DisplayName[0]
+                                    </div>
+                                    <div>
+                                        <div style="font-weight:600;font-size:13px;">@user.DisplayName</div>
+                                        <div style="font-size:11px;color:#9ca3af;">@@@user.Username</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                @if (user.Role == "Owner")
+                                {
+                                    <span class="role-badge-owner">Owner</span>
+                                }
+                                else
+                                {
+                                    <span class="role-badge-admin">Admin</span>
+                                }
+                                @if (isSelf)
+                                {
+                                    <span class="badge bg-secondary ms-1" style="font-size:10px;">You</span>
+                                }
+                            </td>
+                            <td>
+                                @if (user.IsActive)
+                                {
+                                    <span class="badge bg-success" style="font-size:10px;">Active</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary" style="font-size:10px;">Inactive</span>
+                                }
+                            </td>
+                            <td>
+                                <div class="d-flex gap-1">
+                                    @if (!isSelf)
+                                    {
+                                        <form asp-action="ToggleUser" asp-route-username="@user.Username" method="post">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-sm" style="border:1px solid #e5e7eb;font-size:11px;"
+                                                    title="@(user.IsActive ? "Deactivate" : "Activate")">
+                                                <i class="bi @(user.IsActive ? "bi-person-dash" : "bi-person-check")"></i>
+                                            </button>
+                                        </form>
+                                        <form asp-action="DeleteUser" asp-route-username="@user.Username" method="post"
+                                              onsubmit="return confirm('Delete user \'@user.DisplayName\'?');">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-sm"
+                                                    style="border:1px solid #fca5a5;color:#dc2626;font-size:11px;">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <span style="font-size:11px;color:#9ca3af;">Current session</span>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Add user form -->
+    <div class="col-lg-4">
+        <div class="form-card">
+            <div class="section-title">Add New User</div>
+            <form asp-action="AddUser" method="post">
+                @Html.AntiForgeryToken()
+
+                <div class="mb-3">
+                    <label asp-for="AddForm.DisplayName" class="form-label">Full Name *</label>
+                    <input asp-for="AddForm.DisplayName" class="form-control" placeholder="e.g. Ravi Kumar" />
+                    <span asp-validation-for="AddForm.DisplayName" class="text-danger" style="font-size:12px;"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="AddForm.Username" class="form-label">Username *</label>
+                    <input asp-for="AddForm.Username" class="form-control" placeholder="e.g. ravi" />
+                    <span asp-validation-for="AddForm.Username" class="text-danger" style="font-size:12px;"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="AddForm.Role" class="form-label">Role *</label>
+                    <select asp-for="AddForm.Role" class="form-select">
+                        <option value="Admin">Admin — can manage products &amp; categories</option>
+                        <option value="Owner">Owner — full access including settings</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="AddForm.Password" class="form-label">Password * <small class="text-muted fw-normal">(min 8 chars)</small></label>
+                    <input asp-for="AddForm.Password" type="password" class="form-control" />
+                    <span asp-validation-for="AddForm.Password" class="text-danger" style="font-size:12px;"></span>
+                </div>
+                <div class="mb-4">
+                    <label asp-for="AddForm.ConfirmPassword" class="form-label">Confirm Password *</label>
+                    <input asp-for="AddForm.ConfirmPassword" type="password" class="form-control" />
+                    <span asp-validation-for="AddForm.ConfirmPassword" class="text-danger" style="font-size:12px;"></span>
+                </div>
+                <button type="submit" class="btn w-100" style="background:#800020;color:white;font-weight:700;padding:11px;">
+                    <i class="bi bi-person-plus-fill"></i> Add User
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

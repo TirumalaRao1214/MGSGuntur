@@ -1,0 +1,83 @@
+@model List<MarwadiGheeSweetsWeb.Models.Product>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.PageTitle = "Products";
+}
+
+<div class="d-flex align-items-center justify-content-between mb-3">
+    <div style="font-size:13px;color:#6b7280;">@Model.Count product(s) total</div>
+    <a href="/admin/products/create" class="btn btn-sm" style="background:#800020;color:white;">
+        <i class="bi bi-plus-lg"></i> Add Product
+    </a>
+</div>
+
+<div class="admin-table">
+    <table class="table table-hover mb-0">
+        <thead>
+            <tr>
+                <th style="width:50px;"></th>
+                <th>Name</th>
+                <th class="d-none d-md-table-cell">Category</th>
+                <th class="d-none d-md-table-cell">Price</th>
+                <th class="d-none d-sm-table-cell">Flags</th>
+                <th>Status</th>
+                <th style="width:130px;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Model)
+            {
+                <tr>
+                    <td>
+                        <img src="@p.PrimaryImage" style="width:40px;height:40px;object-fit:cover;border-radius:6px;border:1px solid #e5e7eb;"
+                             onerror="this.src='/images/placeholder-sweet.svg'" />
+                    </td>
+                    <td>
+                        <div style="font-weight:600;font-size:13px;">@p.Name</div>
+                        <div style="font-size:11px;color:#9ca3af;">@p.Slug</div>
+                    </td>
+                    <td class="d-none d-md-table-cell" style="color:#6b7280;font-size:13px;">@p.Category</td>
+                    <td class="d-none d-md-table-cell" style="font-size:13px;">₹@p.BasePrice.ToString("F0")</td>
+                    <td class="d-none d-sm-table-cell">
+                        @if (p.IsBestSeller) { <span class="badge" style="background:#b8860b;font-size:10px;">Best Seller</span> }
+                        @if (p.IsNew)        { <span class="badge bg-success" style="font-size:10px;">New</span> }
+                        @if (p.IsFeatured)   { <span class="badge bg-primary" style="font-size:10px;">Featured</span> }
+                    </td>
+                    <td>
+                        @if (p.IsAvailable)
+                        {
+                            <span class="badge bg-success" style="font-size:10px;">Available</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary" style="font-size:10px;">Hidden</span>
+                        }
+                    </td>
+                    <td>
+                        <div class="d-flex gap-1 flex-wrap">
+                            <a href="/admin/products/edit/@p.Id" class="btn btn-sm" title="Edit"
+                               style="border:1px solid #e5e7eb;font-size:11px;padding:3px 8px;">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <form asp-action="ToggleAvailability" asp-route-id="@p.Id" method="post" style="display:inline;">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-sm" title="@(p.IsAvailable ? "Hide" : "Show")"
+                                        style="border:1px solid #e5e7eb;font-size:11px;padding:3px 8px;">
+                                    <i class="bi @(p.IsAvailable ? "bi-eye-slash" : "bi-eye")"></i>
+                                </button>
+                            </form>
+                            <form asp-action="DeleteProduct" asp-route-id="@p.Id" method="post" style="display:inline;"
+                                  onsubmit="return confirm('Delete \'@p.Name\'? This cannot be undone.');">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-sm" title="Delete"
+                                        style="border:1px solid #fca5a5;color:#dc2626;font-size:11px;padding:3px 8px;">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

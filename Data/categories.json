@@ -1,0 +1,65 @@
+[
+  {
+    "id": "cat-ghee",
+    "name": "Ghee Sweets",
+    "slug": "ghee-sweets",
+    "description": "Made with pure desi ghee — our signature category",
+    "icon": "🫙",
+    "imageUrl": "/images/categories/ghee-sweets.jpg",
+    "sortOrder": 1
+  },
+  {
+    "id": "cat-kaju",
+    "name": "Kaju Sweets",
+    "slug": "kaju-sweets",
+    "description": "Premium cashew-based sweets crafted with care",
+    "icon": "🥜",
+    "imageUrl": "/images/categories/kaju-sweets.jpg",
+    "sortOrder": 2
+  },
+  {
+    "id": "cat-milk",
+    "name": "Milk Sweets",
+    "slug": "milk-sweets",
+    "description": "Rich, creamy sweets made from fresh full-fat milk",
+    "icon": "🥛",
+    "imageUrl": "/images/categories/milk-sweets.jpg",
+    "sortOrder": 3
+  },
+  {
+    "id": "cat-traditional",
+    "name": "Traditional Sweets",
+    "slug": "traditional-sweets",
+    "description": "Time-honoured recipes passed down through generations",
+    "icon": "🍮",
+    "imageUrl": "/images/categories/traditional-sweets.jpg",
+    "sortOrder": 4
+  },
+  {
+    "id": "cat-snacks",
+    "name": "Snacks & Namkeen",
+    "slug": "snacks",
+    "description": "Crispy, spicy Telugu-style snacks and namkeen",
+    "icon": "🧆",
+    "imageUrl": "/images/categories/snacks.jpg",
+    "sortOrder": 5
+  },
+  {
+    "id": "cat-dryfruits",
+    "name": "Dry Fruits",
+    "slug": "dry-fruits",
+    "description": "Premium quality dry fruits and nuts",
+    "icon": "🌰",
+    "imageUrl": "/images/categories/dry-fruits.jpg",
+    "sortOrder": 6
+  },
+  {
+    "id": "cat-gifts",
+    "name": "Gift Hampers",
+    "slug": "gift-hampers",
+    "description": "Beautifully curated gift boxes for every occasion",
+    "icon": "🎁",
+    "imageUrl": "/images/categories/gift-hampers.jpg",
+    "sortOrder": 7
+  }
+]

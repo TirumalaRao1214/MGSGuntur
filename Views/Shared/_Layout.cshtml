@@ -1,0 +1,300 @@
+@using MarwadiGheeSweetsWeb.Configuration
+@using Microsoft.Extensions.Options
+@inject IOptions<ShopSettings> ShopOptions
+@{
+    var settings = ShopOptions.Value;
+    var pageTitle = ViewBag.Title != null ? $"{ViewBag.Title} | {settings.ShopName}" : $"{settings.ShopName} — Best Sweets in Guntur";
+    var metaDesc  = ViewBag.MetaDescription as string ?? $"Buy authentic Indian sweets from {settings.ShopName}, Guntur. Ghee Mysore Pak, Kaala Jamun, Kaju Katli & more. Order on WhatsApp.";
+    var canonical = ViewBag.CanonicalUrl as string ?? $"https://marwadigheesweetsguntur.com{Context.Request.Path}";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@pageTitle</title>
+    <meta name="description" content="@metaDesc" />
+    <link rel="canonical" href="@canonical" />
+
+    <!-- Open Graph -->
+    <meta property="og:title"       content="@pageTitle" />
+    <meta property="og:description" content="@metaDesc" />
+    <meta property="og:type"        content="website" />
+    <meta property="og:url"         content="@canonical" />
+    <meta property="og:image"       content="/images/og-image.jpg" />
+    <meta property="og:locale"      content="en_IN" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card"        content="summary_large_image" />
+    <meta name="twitter:title"       content="@pageTitle" />
+    <meta name="twitter:description" content="@metaDesc" />
+
+    <!-- Structured Data: Local Business -->
+    <script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "FoodEstablishment",
+      "name": "@settings.ShopName",
+      "description": "@settings.TagLine",
+      "address": {
+        "@@type": "PostalAddress",
+        "streetAddress": "Etukuru Rd, Flower Market Area, Lalapet",
+        "addressLocality": "Guntur",
+        "addressRegion": "Andhra Pradesh",
+        "postalCode": "522003",
+        "addressCountry": "IN"
+      },
+      "telephone": "@settings.Phone",
+      "openingHours": "Mo-Su 10:00-22:00",
+      "servesCuisine": "Indian Sweets",
+      "aggregateRating": {
+        "@@type": "AggregateRating",
+        "ratingValue": "@settings.Rating",
+        "reviewCount": "@settings.ReviewCount"
+      },
+      "url": "@canonical"
+    }
+    </script>
+
+    @if (ViewBag.JsonLd != null)
+    {
+        <script type="application/ld+json">@Html.Raw(ViewBag.JsonLd)</script>
+    }
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <!-- Brand CSS -->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body data-free-threshold="@settings.FreeShippingThreshold" data-delivery-charge="@settings.DeliveryCharge">
+
+    <!-- ── Announcement Bar ───────────────────────────────────────────── -->
+    <div class="announcement-bar">
+        <div class="container">
+            ✨ Free delivery on orders above ₹@settings.FreeShippingThreshold &nbsp;|&nbsp;
+            Fresh sweets made daily &nbsp;|&nbsp;
+            📞 <a href="tel:@settings.Phone">@settings.Phone</a> &nbsp;|&nbsp;
+            Open @settings.StoreHours
+        </div>
+    </div>
+
+    <!-- ── Sticky Header ───────────────────────────────────────────────── -->
+    <header class="site-header" role="banner">
+        <div class="container">
+            <div class="header-inner">
+                <!-- Logo -->
+                <a href="/" class="site-logo" aria-label="@settings.ShopName — Home">
+                    <div class="logo-emblem" aria-hidden="true">🍬</div>
+                    <div>
+                        <div class="logo-text-main">Marwadi Ghee Sweets</div>
+                        <div class="logo-text-sub">Guntur Since Generations</div>
+                    </div>
+                </a>
+
+                <!-- Desktop Primary Nav -->
+                <nav class="primary-nav" aria-label="Main navigation">
+                    <a href="/sweets?category=ghee-sweets"       class="nav-link">Ghee Sweets</a>
+                    <a href="/sweets?category=kaju-sweets"        class="nav-link">Kaju Sweets</a>
+                    <a href="/sweets?category=traditional-sweets" class="nav-link">Traditional</a>
+                    <a href="/sweets?category=snacks"             class="nav-link">Snacks</a>
+                    <a href="/sweets?category=gift-hampers"       class="nav-link">Gifting</a>
+                    <a href="/#bulk-orders"                       class="nav-link">Bulk Orders</a>
+                    <a href="/#our-story"                         class="nav-link">About Us</a>
+                </nav>
+
+                <!-- Header Actions -->
+                <div class="header-actions">
+                    <a href="/sweets" class="header-action-btn" title="Search sweets">
+                        <i class="bi bi-search"></i>
+                    </a>
+                    <a href="@settings.InstagramUrl" target="_blank" rel="noopener" class="header-action-btn d-none d-md-flex" title="Instagram">
+                        <i class="bi bi-instagram"></i>
+                    </a>
+                    <a href="#" class="header-action-btn js-open-cart" title="Cart" aria-label="Open cart">
+                        <i class="bi bi-bag"></i>
+                        <span class="cart-count-badge js-cart-count" style="display:none">0</span>
+                    </a>
+                    <a href="https://wa.me/@settings.WhatsAppNumber" target="_blank" rel="noopener" class="btn-whatsapp-header d-none d-sm-flex">
+                        <i class="bi bi-whatsapp"></i>
+                        <span>Order Now</span>
+                    </a>
+                    <!-- Mobile menu trigger -->
+                    <button class="header-action-btn d-lg-none" id="mobile-menu-btn" aria-label="Menu" aria-expanded="false">
+                        <i class="bi bi-list"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Panel -->
+        <div id="mobile-menu-panel" class="d-none" style="background:white;border-top:1px solid var(--border);padding:16px 0;">
+            <div class="container">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+                    <a href="/sweets?category=ghee-sweets"       class="filter-pill">🫙 Ghee Sweets</a>
+                    <a href="/sweets?category=kaju-sweets"        class="filter-pill">🥜 Kaju Sweets</a>
+                    <a href="/sweets?category=milk-sweets"        class="filter-pill">🥛 Milk Sweets</a>
+                    <a href="/sweets?category=traditional-sweets" class="filter-pill">🍮 Traditional</a>
+                    <a href="/sweets?category=snacks"             class="filter-pill">🧆 Snacks</a>
+                    <a href="/sweets?category=gift-hampers"       class="filter-pill">🎁 Gift Hampers</a>
+                </div>
+                <a href="https://wa.me/@settings.WhatsAppNumber" target="_blank" class="btn-whatsapp" style="width:100%;justify-content:center;">
+                    <i class="bi bi-whatsapp"></i> Order on WhatsApp
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- ── Cart Drawer ─────────────────────────────────────────────────── -->
+    <div class="cart-drawer-overlay" id="cart-drawer-overlay"></div>
+    <div class="cart-drawer" id="cart-drawer" role="dialog" aria-label="Shopping cart">
+        <div class="cart-drawer-header">
+            <h5 style="font-family:var(--font-serif);font-weight:700;margin:0;">Your Cart</h5>
+            <button id="cart-drawer-close" style="background:none;border:none;font-size:24px;cursor:pointer;color:var(--text-muted);" aria-label="Close cart">×</button>
+        </div>
+        <div class="cart-drawer-body" id="cart-drawer-body"></div>
+        <div class="cart-drawer-footer" id="cart-drawer-footer"></div>
+    </div>
+
+    <!-- ── Page Content ────────────────────────────────────────────────── -->
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <!-- ── WhatsApp Floating Button ────────────────────────────────────── -->
+    <div class="whatsapp-float" aria-label="Chat on WhatsApp">
+        <a href="https://wa.me/@settings.WhatsAppNumber?text=Hello!%20I%20want%20to%20order%20sweets%20from%20Marwadi%20Ghee%20Sweets%2C%20Guntur."
+           target="_blank" rel="noopener" title="Order on WhatsApp">
+            <i class="bi bi-whatsapp"></i>
+        </a>
+    </div>
+
+    <!-- ── Mobile Bottom Navigation ────────────────────────────────────── -->
+    <nav class="mobile-bottom-nav" aria-label="Mobile navigation">
+        <a href="/"       class="mobile-nav-item"><i class="bi bi-house-fill"></i><span>Home</span></a>
+        <a href="/sweets" class="mobile-nav-item"><i class="bi bi-grid-fill"></i><span>Shop</span></a>
+        <a href="#"       class="mobile-nav-item js-open-cart" aria-label="Cart">
+            <span style="position:relative;display:inline-flex;">
+                <i class="bi bi-bag-fill"></i>
+                <span class="cart-count-badge js-cart-count" style="display:none;top:-4px;right:-6px;">0</span>
+            </span>
+            <span>Cart</span>
+        </a>
+        <a href="https://wa.me/@settings.WhatsAppNumber" target="_blank" rel="noopener" class="mobile-nav-item">
+            <i class="bi bi-whatsapp"></i><span>Order</span>
+        </a>
+    </nav>
+
+    <!-- ── Footer ─────────────────────────────────────────────────────── -->
+    <footer class="site-footer" role="contentinfo">
+        <div class="container">
+            <div class="row g-5">
+                <!-- Brand Column -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-brand mb-4">
+                        <div class="site-logo mb-3" style="display:inline-flex;">
+                            <div class="logo-emblem" style="background:var(--gold);">🍬</div>
+                            <div>
+                                <div class="logo-text-main">Marwadi Ghee Sweets</div>
+                                <div class="logo-text-sub">Guntur Since Generations</div>
+                            </div>
+                        </div>
+                    </div>
+                    <p style="color:rgba(255,255,255,.65);font-size:14px;line-height:1.7;">
+                        Serving Guntur with the purest ghee sweets since generations. Every sweet is made
+                        fresh daily with hand-selected ingredients and traditional family recipes.
+                    </p>
+                    <div style="display:flex;align-items:center;gap:6px;margin:16px 0;color:var(--gold-light);">
+                        <span style="font-size:20px;">⭐</span>
+                        <span style="font-family:var(--font-serif);font-size:1.3rem;font-weight:700;">@settings.Rating</span>
+                        <span style="font-size:13px;color:rgba(255,255,255,.6);">(@settings.ReviewCount reviews)</span>
+                    </div>
+                    <div class="social-links">
+                        <a href="@settings.InstagramUrl" target="_blank" rel="noopener" class="social-link" title="Instagram"><i class="bi bi-instagram"></i></a>
+                        <a href="@settings.FacebookUrl"  target="_blank" rel="noopener" class="social-link" title="Facebook"><i class="bi bi-facebook"></i></a>
+                        <a href="https://wa.me/@settings.WhatsAppNumber" target="_blank" rel="noopener" class="social-link" title="WhatsApp"><i class="bi bi-whatsapp"></i></a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="col-lg-2 col-md-6 col-6">
+                    <h6 class="footer-heading">Shop</h6>
+                    <ul class="footer-links">
+                        <li><a href="/sweets?category=ghee-sweets">Ghee Sweets</a></li>
+                        <li><a href="/sweets?category=kaju-sweets">Kaju Sweets</a></li>
+                        <li><a href="/sweets?category=milk-sweets">Milk Sweets</a></li>
+                        <li><a href="/sweets?category=traditional-sweets">Traditional</a></li>
+                        <li><a href="/sweets?category=snacks">Snacks</a></li>
+                        <li><a href="/sweets?category=gift-hampers">Gift Hampers</a></li>
+                    </ul>
+                </div>
+
+                <!-- Help Links -->
+                <div class="col-lg-2 col-md-6 col-6">
+                    <h6 class="footer-heading">Help</h6>
+                    <ul class="footer-links">
+                        <li><a href="/#bulk-orders">Bulk Orders</a></li>
+                        <li><a href="/#our-story">About Us</a></li>
+                        <li><a href="/Cart">View Cart</a></li>
+                        <li><a href="/Checkout">Checkout</a></li>
+                        <li><a href="https://wa.me/@settings.WhatsAppNumber" target="_blank">WhatsApp Us</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact -->
+                <div class="col-lg-4 col-md-6">
+                    <h6 class="footer-heading">Visit Us</h6>
+                    <div class="footer-contact-item">
+                        <i class="bi bi-geo-alt-fill icon"></i>
+                        <span>@settings.Address</span>
+                    </div>
+                    <div class="footer-contact-item">
+                        <i class="bi bi-clock-fill icon"></i>
+                        <span>@settings.StoreHours</span>
+                    </div>
+                    <div class="footer-contact-item">
+                        <i class="bi bi-telephone-fill icon"></i>
+                        <a href="tel:@settings.Phone" style="color:rgba(255,255,255,.75);">@settings.Phone</a>
+                    </div>
+                    <div class="footer-contact-item">
+                        <i class="bi bi-envelope-fill icon"></i>
+                        <a href="mailto:@settings.Email" style="color:rgba(255,255,255,.75);">@settings.Email</a>
+                    </div>
+                    <a href="@settings.GoogleMapsUrl" target="_blank" rel="noopener"
+                       class="btn-outline-brand mt-3" style="border-color:rgba(255,255,255,.3);color:rgba(255,255,255,.8);font-size:13px;padding:8px 16px;">
+                        <i class="bi bi-map-fill"></i> Get Directions
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+            <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
+                <span>© @DateTime.Now.Year @settings.ShopName, Guntur. All rights reserved.</span>
+                <span>Made with ❤️ for Guntur's sweetest traditions</span>
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <a href="@(User.IsInRole("Owner") ? "/owner" : "/admin")" style="font-size:11px;color:rgba(255,255,255,.3);">
+                        <i class="bi bi-shield-lock"></i> Admin Panel
+                    </a>
+                }
+                else
+                {
+                    <a href="/login" style="font-size:11px;color:rgba(255,255,255,.2);">Staff Login</a>
+                }
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Cart JS -->
+    <script src="~/js/cart.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

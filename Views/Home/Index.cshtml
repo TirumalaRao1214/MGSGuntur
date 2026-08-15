@@ -1,0 +1,564 @@
+@model MarwadiGheeSweetsWeb.ViewModels.HomeViewModel
+@using MarwadiGheeSweetsWeb.Configuration
+@using Microsoft.Extensions.Options
+@inject IOptions<ShopSettings> ShopOptions
+@{
+    ViewBag.Title       = "Best Sweets in Guntur — Ghee Mysore Pak & Kaala Jamun";
+    ViewBag.MetaDescription = Model.MetaDescription;
+    var settings = ShopOptions.Value;
+}
+
+<!-- ══ HERO CAROUSEL ══════════════════════════════════════════════════════════ -->
+<section class="hero-carousel" aria-label="Featured promotions">
+    <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+            <!-- Slide 1 -->
+            <div class="carousel-item active">
+                <div class="hero-slide">
+                    <div class="hero-slide-bg" style="background: linear-gradient(135deg,#3d1c0f 0%,#800020 50%,#b8860b 100%);"></div>
+                    <div class="hero-overlay"></div>
+                    <div class="container">
+                        <div class="hero-content">
+                            <div class="hero-badge">⭐ Rated @settings.Rating/5 by @settings.ReviewCount+ Customers</div>
+                            <h1 class="hero-title">
+                                Guntur's Most Loved<br><span class="highlight">Ghee Sweets</span>
+                            </h1>
+                            <p class="hero-desc">
+                                Made fresh daily with pure desi ghee and time-honoured recipes.
+                                Serving Guntur's families since generations.
+                            </p>
+                            <div class="hero-cta">
+                                <a href="/sweets" class="btn-primary-brand">
+                                    <i class="bi bi-grid-fill"></i> Shop All Sweets
+                                </a>
+                                <a href="https://wa.me/@settings.WhatsAppNumber" target="_blank" rel="noopener" class="btn-whatsapp">
+                                    <i class="bi bi-whatsapp"></i> Order on WhatsApp
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Slide 2 -->
+            <div class="carousel-item">
+                <div class="hero-slide">
+                    <div class="hero-slide-bg" style="background: linear-gradient(135deg,#1a0a05 0%,#5c0011 40%,#800020 100%);"></div>
+                    <div class="hero-overlay"></div>
+                    <div class="container">
+                        <div class="hero-content">
+                            <div class="hero-badge">🏆 Signature Product · Est. in Guntur</div>
+                            <h1 class="hero-title">
+                                The Original<br><span class="highlight">Ghee Mysore Pak</span>
+                            </h1>
+                            <p class="hero-desc">
+                                Pure ghee, besan, sugar — and decades of craftsmanship.
+                                Melt-in-mouth perfection in every golden piece.
+                            </p>
+                            <div class="hero-cta">
+                                <a href="/sweets/ghee-mysore-pak" class="btn-primary-brand">
+                                    <i class="bi bi-star-fill"></i> Order Now — ₹180 / 250g
+                                </a>
+                                <a href="/sweets?category=ghee-sweets" class="btn-outline-brand" style="border-color:rgba(255,255,255,.5);color:white;">
+                                    See All Ghee Sweets
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Slide 3 -->
+            <div class="carousel-item">
+                <div class="hero-slide">
+                    <div class="hero-slide-bg" style="background: linear-gradient(135deg,#2c1810 0%,#800020 30%,#b8860b 100%);"></div>
+                    <div class="hero-overlay"></div>
+                    <div class="container">
+                        <div class="hero-content">
+                            <div class="hero-badge">🎁 Perfect for Every Occasion</div>
+                            <h1 class="hero-title">
+                                Premium<br><span class="highlight">Gift Hampers</span>
+                            </h1>
+                            <p class="hero-desc">
+                                Beautifully curated sweet boxes for Diwali, weddings, Ugadi
+                                and corporate gifting. Customisable for bulk orders.
+                            </p>
+                            <div class="hero-cta">
+                                <a href="/sweets?category=gift-hampers" class="btn-gold">
+                                    <i class="bi bi-gift-fill"></i> Explore Gift Boxes
+                                </a>
+                                <a href="/#bulk-orders" class="btn-outline-brand" style="border-color:rgba(255,255,255,.5);color:white;">
+                                    Bulk / Corporate Orders
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev" aria-label="Previous slide">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next" aria-label="Next slide">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+    </div>
+</section>
+
+<!-- ══ CATEGORIES GRID ════════════════════════════════════════════════════════ -->
+<section class="py-5 bg-cream" aria-labelledby="categories-heading">
+    <div class="container">
+        <div class="text-center mb-4">
+            <h2 class="section-title" id="categories-heading">Shop by Category</h2>
+            <div class="section-divider"><span>🍬</span></div>
+            <p class="section-subtitle">From melt-in-mouth ghee sweets to crispy snacks — discover our full range</p>
+        </div>
+        @if (Model.Categories.Any())
+        {
+            <div class="row g-3">
+                @foreach (var cat in Model.Categories)
+                {
+                    <div class="col-6 col-sm-4 col-lg-3 animate-on-scroll">
+                        <a href="/sweets?category=@cat.Slug" class="category-card" aria-label="Browse @cat.Name">
+                            <span class="category-icon" aria-hidden="true">@cat.Icon</span>
+                            <div class="category-name">@cat.Name</div>
+                            <div class="category-desc">@cat.Description</div>
+                        </a>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</section>
+
+<!-- ══ BEST SELLERS ═══════════════════════════════════════════════════════════ -->
+<section class="py-5" aria-labelledby="bestsellers-heading">
+    <div class="container">
+        <div class="d-flex align-items-end justify-content-between mb-4 flex-wrap gap-3">
+            <div>
+                <div style="color:var(--gold);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;">Most Loved</div>
+                <h2 class="section-title mb-1" id="bestsellers-heading">Best Sellers</h2>
+                <p class="mb-0" style="color:var(--text-muted);">What Guntur can't stop ordering</p>
+            </div>
+            <a href="/sweets" class="btn-outline-brand" style="font-size:13px;padding:9px 20px;">
+                View All <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+
+        @if (Model.BestSellers.Any())
+        {
+            <div class="row g-3">
+                @foreach (var product in Model.BestSellers)
+                {
+                    <div class="col-6 col-sm-6 col-md-4 col-lg-3 animate-on-scroll">
+                        @await Html.PartialAsync("_ProductCard", product)
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p class="text-center text-muted py-4">Loading our best sellers...</p>
+        }
+    </div>
+</section>
+
+<!-- ══ PROMO BANNER ═══════════════════════════════════════════════════════════ -->
+<div class="promo-banner" role="complementary">
+    <div class="container">
+        <div class="row align-items-center g-4">
+            <div class="col-md-8">
+                <p class="promo-banner-title mb-2">Free Delivery on Orders Above ₹@settings.FreeShippingThreshold</p>
+                <p class="promo-banner-text mb-0">
+                    Order on WhatsApp and get your sweets delivered fresh to your doorstep in Guntur.
+                    Same-day delivery available!
+                </p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <a href="https://wa.me/@settings.WhatsAppNumber" target="_blank" rel="noopener" class="btn-whatsapp" style="font-size:16px;padding:14px 28px;">
+                    <i class="bi bi-whatsapp" style="font-size:20px;"></i>
+                    Order on WhatsApp
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══ FEATURED PRODUCTS ══════════════════════════════════════════════════════ -->
+@if (Model.FeaturedProducts.Any())
+{
+    <section class="py-5 bg-cream" aria-labelledby="featured-heading">
+        <div class="container">
+            <div class="text-center mb-4">
+                <div style="color:var(--gold);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;">Hand Picked</div>
+                <h2 class="section-title" id="featured-heading">Featured Sweets</h2>
+                <div class="section-divider"><span>✨</span></div>
+            </div>
+            <div class="row g-3">
+                @foreach (var product in Model.FeaturedProducts)
+                {
+                    <div class="col-6 col-md-4 col-lg-4 animate-on-scroll">
+                        @await Html.PartialAsync("_ProductCard", product)
+                    </div>
+                }
+            </div>
+            <div class="text-center mt-4">
+                <a href="/sweets" class="btn-primary-brand">Browse All Sweets <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+    </section>
+}
+
+<!-- ══ WHY CHOOSE US ══════════════════════════════════════════════════════════ -->
+<section class="py-5" aria-labelledby="why-heading">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title" id="why-heading">Why Guntur Chooses Us</h2>
+            <div class="section-divider"><span>🫙</span></div>
+            <p class="section-subtitle">Our commitment to quality is what keeps families coming back for generations</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-sm-6 col-lg-3 animate-on-scroll">
+                <div class="why-card">
+                    <div class="why-icon">🫙</div>
+                    <div class="why-title">100% Pure Ghee</div>
+                    <p class="why-desc">Every sweet is made using only pure desi ghee — no shortcuts, no substitutes. You taste the difference.</p>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3 animate-on-scroll">
+                <div class="why-card">
+                    <div class="why-icon">🌅</div>
+                    <div class="why-title">Made Fresh Daily</div>
+                    <p class="why-desc">Our kitchen starts at dawn. Everything you order is freshly prepared the same day — never stored for days.</p>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3 animate-on-scroll">
+                <div class="why-card">
+                    <div class="why-icon">👨‍👩‍👧‍👦</div>
+                    <div class="why-title">Family Recipes</div>
+                    <p class="why-desc">Recipes passed down through generations — the same authentic flavours that Guntur families have trusted for decades.</p>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3 animate-on-scroll">
+                <div class="why-card">
+                    <div class="why-icon">📲</div>
+                    <div class="why-title">Easy WhatsApp Ordering</div>
+                    <p class="why-desc">No complex checkout. Pick your sweets, tap Order on WhatsApp, and we handle the rest. Fast, easy, personal.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══ GIFT HAMPERS ═══════════════════════════════════════════════════════════ -->
+@if (Model.GiftHampers.Any())
+{
+    <section class="py-5 bg-cream" id="gifting" aria-labelledby="gifts-heading">
+        <div class="container">
+            <div class="row align-items-center mb-5">
+                <div class="col-md-8">
+                    <div style="color:var(--gold);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;">For Every Occasion</div>
+                    <h2 class="section-title mb-2" id="gifts-heading">Premium Gift Hampers</h2>
+                    <p style="color:var(--text-muted);">Diwali · Weddings · Ugadi · Corporate Gifting · Baby Showers</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <a href="/sweets?category=gift-hampers" class="btn-outline-brand">All Gift Boxes</a>
+                </div>
+            </div>
+            <div class="row g-4">
+                @foreach (var gift in Model.GiftHampers)
+                {
+                    <div class="col-md-6 col-lg-4 animate-on-scroll">
+                        @await Html.PartialAsync("_ProductCard", gift)
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+}
+
+<!-- ══ OUR STORY ══════════════════════════════════════════════════════════════ -->
+<section class="story-section" id="our-story" aria-labelledby="story-heading">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-5 animate-on-scroll">
+                <div class="story-image-wrap">
+                    <div style="background:linear-gradient(135deg,var(--burgundy),var(--gold));border-radius:20px;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;">
+                        <div style="text-align:center;color:white;padding:40px;">
+                            <div style="font-size:64px;margin-bottom:16px;">🍬</div>
+                            <div style="font-family:var(--font-serif);font-size:1.4rem;font-weight:700;">Marwadi Ghee Sweets</div>
+                            <div style="font-size:14px;opacity:.8;margin-top:4px;">Lalapet, Guntur</div>
+                        </div>
+                    </div>
+                    <div class="story-badge">
+                        <div class="number">@settings.Rating</div>
+                        <div class="label">⭐ Google Rating</div>
+                        <div class="label">@settings.ReviewCount+ Reviews</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-7">
+                <div style="color:var(--gold);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px;">Our Story</div>
+                <h2 class="section-title" id="story-heading">Guntur's Most Trusted Sweet Shop</h2>
+                <div class="section-divider" style="justify-content:flex-start;margin-bottom:20px;"><span>🫙</span></div>
+                <p style="color:var(--text-body);font-size:16px;line-height:1.8;margin-bottom:16px;">
+                    At Marwadi Ghee Sweets, every sweet tells the story of dedication, tradition, and pure ingredients.
+                    Located in the heart of Lalapet, Guntur, we've been serving families across Andhra Pradesh
+                    with authentic handmade sweets crafted using only the finest desi ghee.
+                </p>
+                <p style="color:var(--text-muted);font-size:15px;line-height:1.7;margin-bottom:24px;">
+                    Our kitchen opens every morning before sunrise so that every piece you buy is made fresh that day.
+                    Our Ghee Mysore Pak and Kaala Jamun have become legendary in Guntur — not because we market them,
+                    but because our customers keep coming back and bringing their families.
+                </p>
+                <div class="row g-3 mb-4">
+                    <div class="col-4">
+                        <div style="text-align:center;background:white;border:1px solid var(--border);border-radius:var(--radius);padding:16px;">
+                            <div style="font-family:var(--font-serif);font-size:1.8rem;font-weight:800;color:var(--burgundy);">@settings.ReviewCount+</div>
+                            <div style="font-size:12px;color:var(--text-muted);">Happy Customers</div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div style="text-align:center;background:white;border:1px solid var(--border);border-radius:var(--radius);padding:16px;">
+                            <div style="font-family:var(--font-serif);font-size:1.8rem;font-weight:800;color:var(--burgundy);">@settings.Rating★</div>
+                            <div style="font-size:12px;color:var(--text-muted);">Google Rating</div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div style="text-align:center;background:white;border:1px solid var(--border);border-radius:var(--radius);padding:16px;">
+                            <div style="font-family:var(--font-serif);font-size:1.8rem;font-weight:800;color:var(--burgundy);">15+</div>
+                            <div style="font-size:12px;color:var(--text-muted);">Sweet Varieties</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="/sweets" class="btn-primary-brand me-3">Shop Now</a>
+                <a href="@settings.GoogleMapsUrl" target="_blank" rel="noopener" class="btn-outline-brand">
+                    <i class="bi bi-geo-alt-fill"></i> Find Us
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══ CORPORATE ORDERS ═══════════════════════════════════════════════════════ -->
+<section class="py-5" id="bulk-orders" style="background:var(--ivory);" aria-labelledby="bulk-heading">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <div style="color:var(--gold);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px;">Bulk & Corporate</div>
+                <h2 class="section-title" id="bulk-heading">Corporate & Bulk Orders</h2>
+                <div class="section-divider" style="justify-content:flex-start;"><span>🏢</span></div>
+                <p style="color:var(--text-body);font-size:16px;line-height:1.8;margin-bottom:16px;">
+                    Planning to gift clients, employees or guests? Our Corporate Gift Boxes are
+                    available in customised quantities, packaging, and selection. We've served
+                    businesses across Guntur and Andhra Pradesh for festive occasions.
+                </p>
+                <div class="row g-3 mb-4">
+                    <div class="col-sm-6">
+                        <div style="display:flex;gap:12px;align-items:flex-start;background:var(--cream);border:1px solid var(--border);border-radius:var(--radius);padding:16px;">
+                            <span style="font-size:28px;flex-shrink:0;">📦</span>
+                            <div>
+                                <div style="font-weight:700;font-size:14px;margin-bottom:4px;">Minimum 5kg Orders</div>
+                                <div style="font-size:12px;color:var(--text-muted);">Special pricing for bulk orders over 5kg</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div style="display:flex;gap:12px;align-items:flex-start;background:var(--cream);border:1px solid var(--border);border-radius:var(--radius);padding:16px;">
+                            <span style="font-size:28px;flex-shrink:0;">🎀</span>
+                            <div>
+                                <div style="font-weight:700;font-size:14px;margin-bottom:4px;">Custom Packaging</div>
+                                <div style="font-size:12px;color:var(--text-muted);">Branded boxes with your logo or message</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div style="display:flex;gap:12px;align-items:flex-start;background:var(--cream);border:1px solid var(--border);border-radius:var(--radius);padding:16px;">
+                            <span style="font-size:28px;flex-shrink:0;">🚚</span>
+                            <div>
+                                <div style="font-weight:700;font-size:14px;margin-bottom:4px;">Pan-Andhra Delivery</div>
+                                <div style="font-size:12px;color:var(--text-muted);">We ship to all major cities in AP & Telangana</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div style="display:flex;gap:12px;align-items:flex-start;background:var(--cream);border:1px solid var(--border);border-radius:var(--radius);padding:16px;">
+                            <span style="font-size:28px;flex-shrink:0;">📅</span>
+                            <div>
+                                <div style="font-weight:700;font-size:14px;margin-bottom:4px;">Advance Booking</div>
+                                <div style="font-size:12px;color:var(--text-muted);">Book 3+ days ahead for large quantities</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a href="https://wa.me/@settings.WhatsAppNumber?text=Hello!%20I%20need%20to%20enquire%20about%20bulk%20%2F%20corporate%20sweet%20orders."
+                   target="_blank" rel="noopener" class="btn-whatsapp" style="font-size:15px;padding:13px 28px;">
+                    <i class="bi bi-whatsapp" style="font-size:18px;"></i>
+                    Enquire on WhatsApp
+                </a>
+            </div>
+            <div class="col-lg-5 animate-on-scroll">
+                <div style="background:linear-gradient(135deg,var(--burgundy-dark),var(--burgundy));border-radius:var(--radius-lg);padding:40px;color:white;text-align:center;">
+                    <div style="font-size:64px;margin-bottom:20px;">🎁</div>
+                    <div style="font-family:var(--font-serif);font-size:1.5rem;font-weight:700;color:var(--gold-light);margin-bottom:12px;">
+                        Festival Season Offer
+                    </div>
+                    <p style="color:rgba(255,255,255,.8);font-size:14px;line-height:1.6;margin-bottom:20px;">
+                        Get special pricing on bulk sweet orders for Diwali, Ugadi, Sankranti & all festive seasons.
+                        Call or WhatsApp to get a custom quote.
+                    </p>
+                    <a href="tel:@settings.Phone" class="btn-gold" style="width:100%;justify-content:center;margin-bottom:10px;">
+                        <i class="bi bi-telephone-fill"></i> @settings.Phone
+                    </a>
+                    <a href="@settings.GoogleMapsUrl" target="_blank" rel="noopener"
+                       style="color:rgba(255,255,255,.7);font-size:13px;display:block;text-align:center;">
+                        📍 @settings.City, Andhra Pradesh
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══ TESTIMONIALS ═══════════════════════════════════════════════════════════ -->
+<section class="py-5 bg-cream" aria-labelledby="reviews-heading">
+    <div class="container">
+        <div class="text-center mb-5">
+            <div style="color:var(--gold);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;">What Customers Say</div>
+            <h2 class="section-title" id="reviews-heading">@settings.ReviewCount+ Happy Customers</h2>
+            <div class="section-divider"><span>⭐</span></div>
+            <p class="section-subtitle">Rated <strong>@settings.Rating/5</strong> on Google — here's what they say</p>
+        </div>
+
+        <div class="row g-4 mb-5">
+            @foreach (var t in Model.Testimonials)
+            {
+                <div class="col-md-6 col-lg-4 animate-on-scroll">
+                    <div class="testimonial-card">
+                        <div class="testimonial-quote">"</div>
+                        <p class="testimonial-text">@t.Review</p>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="testimonial-author">
+                                <div class="testimonial-avatar">@t.AvatarInitials</div>
+                                <div>
+                                    <div class="testimonial-name">@t.CustomerName</div>
+                                    <div class="testimonial-loc">
+                                        <i class="bi bi-geo-alt-fill" style="color:var(--gold);font-size:10px;"></i>
+                                        @t.Location
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    <span style="color:@(i <= (int)t.Rating ? "var(--gold)" : "var(--border)");font-size:14px;">★</span>
+                                }
+                            </div>
+                        </div>
+                        @if (!string.IsNullOrWhiteSpace(t.ProductPurchased))
+                        {
+                            <div style="margin-top:12px;font-size:11px;color:var(--gold);font-weight:600;border-top:1px solid var(--border);padding-top:10px;">
+                                <i class="bi bi-bag-heart-fill"></i> Purchased: @t.ProductPurchased
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Overall Rating Box -->
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="overall-rating-box">
+                    <div class="rating-big-number">@settings.Rating</div>
+                    <div style="color:var(--gold-light);font-size:24px;margin:8px 0;">★★★★★</div>
+                    <div style="font-size:16px;color:rgba(255,255,255,.8);margin-bottom:16px;">
+                        Based on <strong>@settings.ReviewCount</strong> customer reviews
+                    </div>
+                    <a href="@settings.GoogleMapsUrl" target="_blank" rel="noopener"
+                       class="btn-gold" style="font-size:13px;padding:10px 24px;">
+                        <i class="bi bi-google"></i> See All Reviews on Google
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══ STORE LOCATION ════════════════════════════════════════════════════════ -->
+<section class="py-5" id="store-location" aria-labelledby="location-heading">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title" id="location-heading">Visit Our Store</h2>
+            <div class="section-divider"><span>📍</span></div>
+        </div>
+        <div class="row g-4 align-items-stretch">
+            <div class="col-lg-5">
+                <div style="background:var(--cream);border:1px solid var(--border);border-radius:var(--radius);padding:32px;height:100%;">
+                    <h3 style="font-family:var(--font-serif);font-size:1.4rem;font-weight:700;color:var(--text-dark);margin-bottom:24px;">
+                        Marwadi Ghee Sweets
+                    </h3>
+                    <div class="footer-contact-item" style="color:var(--text-body);">
+                        <i class="bi bi-geo-alt-fill icon" style="color:var(--burgundy);"></i>
+                        <div>
+                            <strong>Address</strong><br>
+                            <span style="color:var(--text-muted);">@settings.Address</span>
+                        </div>
+                    </div>
+                    <div class="footer-contact-item" style="color:var(--text-body);margin-top:12px;">
+                        <i class="bi bi-clock-fill icon" style="color:var(--burgundy);"></i>
+                        <div>
+                            <strong>Store Hours</strong><br>
+                            <span style="color:var(--text-muted);">@settings.StoreHours</span>
+                        </div>
+                    </div>
+                    <div class="footer-contact-item" style="color:var(--text-body);margin-top:12px;">
+                        <i class="bi bi-telephone-fill icon" style="color:var(--burgundy);"></i>
+                        <div>
+                            <strong>Phone</strong><br>
+                            <a href="tel:@settings.Phone" style="color:var(--burgundy);">@settings.Phone</a>
+                        </div>
+                    </div>
+                    <div class="mt-4 d-flex gap-3 flex-wrap">
+                        <a href="@settings.GoogleMapsUrl" target="_blank" rel="noopener" class="btn-primary-brand" style="font-size:13px;padding:10px 20px;">
+                            <i class="bi bi-map-fill"></i> Get Directions
+                        </a>
+                        <a href="https://wa.me/@settings.WhatsAppNumber" target="_blank" rel="noopener" class="btn-whatsapp" style="font-size:13px;padding:10px 20px;">
+                            <i class="bi bi-whatsapp"></i> WhatsApp Us
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-7">
+                <div style="background:var(--cream);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;height:380px;display:flex;align-items:center;justify-content:center;">
+                    <div style="text-align:center;padding:40px;">
+                        <div style="font-size:48px;margin-bottom:16px;">🗺️</div>
+                        <div style="font-family:var(--font-serif);font-size:1.3rem;font-weight:700;color:var(--text-dark);margin-bottom:8px;">
+                            Lalapet, Guntur
+                        </div>
+                        <div style="color:var(--text-muted);font-size:14px;margin-bottom:20px;">
+                            Etukuru Rd, Flower Market Area, Lalapet
+                        </div>
+                        <a href="@settings.GoogleMapsUrl" target="_blank" rel="noopener" class="btn-primary-brand">
+                            <i class="bi bi-geo-alt-fill"></i> Open in Google Maps
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+<script>
+// Highlight active nav link based on current page
+document.querySelectorAll('.primary-nav .nav-link').forEach(link => {
+    if (window.location.pathname === '/' && link.getAttribute('href') === '/') {
+        link.classList.add('active');
+    }
+});
+</script>
+}

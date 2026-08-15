@@ -1,0 +1,96 @@
+@model MarwadiGheeSweetsWeb.ViewModels.ProductListViewModel
+@{
+    ViewBag.Title = Model.MetaTitle;
+    ViewBag.MetaDescription = Model.MetaDescription;
+}
+
+<!-- Breadcrumb -->
+<nav class="page-breadcrumb" aria-label="Breadcrumb">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            @if (!string.IsNullOrWhiteSpace(Model.SelectedCategory))
+            {
+                <li class="breadcrumb-item"><a href="/sweets">All Sweets</a></li>
+                <li class="breadcrumb-item active">
+                    @(Model.Categories.FirstOrDefault(c => c.Slug == Model.SelectedCategory)?.Name ?? Model.SelectedCategory)
+                </li>
+            }
+            else
+            {
+                <li class="breadcrumb-item active">All Sweets</li>
+            }
+        </ol>
+    </div>
+</nav>
+
+<section class="py-5" aria-labelledby="catalogue-heading">
+    <div class="container">
+
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+            <div class="row g-3 align-items-center">
+                <!-- Search -->
+                <div class="col-md-4">
+                    <form method="get" action="/sweets" role="search">
+                        <div class="search-input-wrap">
+                            <i class="bi bi-search search-icon"></i>
+                            <input type="text" name="search" value="@Model.SearchTerm"
+                                   placeholder="Search sweets..." class="form-control"
+                                   aria-label="Search sweets" style="border-radius:30px;padding:10px 20px 10px 44px;" />
+                        </div>
+                        @if (!string.IsNullOrWhiteSpace(Model.SelectedCategory))
+                        {
+                            <input type="hidden" name="category" value="@Model.SelectedCategory" />
+                        }
+                    </form>
+                </div>
+                <!-- Sort -->
+                <div class="col-md-3">
+                    <select class="form-select" id="sort-select" style="border:1px solid var(--border);background:var(--cream);border-radius:30px;padding:10px 16px;"
+                            onchange="window.location='/sweets?category=@Model.SelectedCategory&search=@Model.SearchTerm&sort='+this.value"
+                            aria-label="Sort products">
+                        @{ var sb = Model.SortBy ?? ""; }
+                        <option value=""          selected="@(sb == "" ? "selected" : null)">Sort: Default</option>
+                        <option value="price-asc" selected="@(sb == "price-asc"  ? "selected" : null)">Price: Low to High</option>
+                        <option value="price-desc" selected="@(sb == "price-desc" ? "selected" : null)">Price: High to Low</option>
+                        <option value="rating"    selected="@(sb == "rating"     ? "selected" : null)">Top Rated</option>
+                        <option value="newest"    selected="@(sb == "newest"     ? "selected" : null)">Newest First</option>
+                    </select>
+                </div>
+                <!-- Results count -->
+                <div class="col-md-5 text-md-end">
+                    <span style="color:var(--text-muted);font-size:14px;">
+                        <strong style="color:var(--text-dark);">@Model.TotalCount</strong> products found
+                        @if (!string.IsNullOrWhiteSpace(Model.SearchTerm))
+                        {
+                            <span> for "<em>@Model.SearchTerm</em>"</span>
+                        }
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Products Grid -->
+        @if (Model.Products.Any())
+        {
+            <div class="row g-3" id="products-grid">
+                @foreach (var product in Model.Products)
+                {
+                    <div class="col-6 col-sm-6 col-md-4 col-lg-3">
+                        @await Html.PartialAsync("_ProductCard", product)
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <div style="font-size:56px;margin-bottom:16px;">🔍</div>
+                <h3 style="font-family:var(--font-serif);color:var(--text-dark);">No sweets found</h3>
+                <p style="color:var(--text-muted);">Try a different search term or browse a different category.</p>
+                <a href="/sweets" class="btn-primary-brand mt-2">Browse All Sweets</a>
+            </div>
+        }
+    </div>
+</section>

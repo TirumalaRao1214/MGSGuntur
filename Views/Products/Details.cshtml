@@ -1,0 +1,333 @@
+@model MarwadiGheeSweetsWeb.ViewModels.ProductDetailViewModel
+@using MarwadiGheeSweetsWeb.Configuration
+@using Microsoft.Extensions.Options
+@inject IOptions<ShopSettings> ShopOptions
+@{
+    ViewBag.Title          = Model.MetaTitle;
+    ViewBag.MetaDescription = Model.MetaDescription;
+    ViewBag.JsonLd          = Model.JsonLd;
+    var settings = ShopOptions.Value;
+    var p = Model.Product;
+    var firstWeight = p.Weights.FirstOrDefault();
+}
+
+<!-- Breadcrumb -->
+<nav class="page-breadcrumb" aria-label="Breadcrumb">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/sweets">Sweets</a></li>
+            <li class="breadcrumb-item"><a href="/sweets?category=@p.CategorySlug">@p.Category</a></li>
+            <li class="breadcrumb-item active">@p.Name</li>
+        </ol>
+    </div>
+</nav>
+
+<article class="py-5">
+    <div class="container">
+        <div class="row g-5">
+
+            <!-- ── Image Gallery ─────────────────────────────────────────── -->
+            <div class="col-lg-5">
+                <div class="product-gallery">
+                    <div class="gallery-main" id="gallery-main">
+                        <img src="@p.PrimaryImage"
+                             alt="@p.Name — buy from Marwadi Ghee Sweets Guntur"
+                             id="gallery-main-img"
+                             onerror="this.src='/images/placeholder-sweet.svg'" />
+                    </div>
+                    @if (p.Images.Count > 1)
+                    {
+                        <div class="gallery-thumbs">
+                            @for (int i = 0; i < p.Images.Count; i++)
+                            {
+                                <div class="gallery-thumb @(i == 0 ? "active" : "")" onclick="switchImage('@p.Images[i]', this)">
+                                    <img src="@p.Images[i]" alt="@p.Name image @(i+1)"
+                                         onerror="this.src='/images/placeholder-sweet.svg'" />
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- ── Product Info ──────────────────────────────────────────── -->
+            <div class="col-lg-7">
+                <!-- Category + Badges -->
+                <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                    <a href="/sweets?category=@p.CategorySlug" style="font-size:12px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;">
+                        @p.Category
+                    </a>
+                    @if (!string.IsNullOrWhiteSpace(p.Badge))
+                    {
+                        <span class="product-badge" style="position:static;">@p.Badge</span>
+                    }
+                    @if (p.IsNew)
+                    {
+                        <span class="product-badge badge-green" style="position:static;">New</span>
+                    }
+                </div>
+
+                <h1 style="font-family:var(--font-serif);font-size:2rem;font-weight:800;color:var(--text-dark);margin-bottom:12px;">
+                    @p.Name
+                </h1>
+
+                <!-- Rating -->
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <span style="color:var(--gold);font-size:18px;">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            <span style="color:@(i <= (int)p.Rating ? "var(--gold)" : "var(--border)");">★</span>
+                        }
+                    </span>
+                    <span style="font-size:15px;font-weight:700;color:var(--text-dark);">@p.Rating.ToString("F1")</span>
+                    <span style="font-size:13px;color:var(--text-muted);">(@p.ReviewCount reviews)</span>
+                </div>
+
+                <p style="font-size:16px;color:var(--text-body);line-height:1.7;margin-bottom:20px;">
+                    @p.Description
+                </p>
+
+                <!-- Availability -->
+                @if (!p.IsAvailable)
+                {
+                    <div style="background:#fff3cd;border:1px solid #ffc107;border-radius:8px;padding:12px 16px;font-size:13px;color:#7a5c00;margin-bottom:16px;">
+                        ⚠️ Currently out of stock. <a href="https://wa.me/@settings.WhatsAppNumber" target="_blank" style="color:var(--burgundy);">WhatsApp us</a> to check availability.
+                    </div>
+                }
+
+                <!-- Price Display -->
+                <div style="margin-bottom:8px;">
+                    <span id="current-price" style="font-family:var(--font-serif);font-size:2.2rem;font-weight:800;color:var(--burgundy);">
+                        ₹@(firstWeight?.Price.ToString("F0") ?? "0")
+                    </span>
+                    @if (firstWeight?.OriginalPrice.HasValue == true)
+                    {
+                        <span id="original-price" style="font-size:16px;color:var(--text-muted);text-decoration:line-through;margin-left:8px;">
+                            ₹@firstWeight.OriginalPrice.Value.ToString("F0")
+                        </span>
+                    }
+                </div>
+
+                <!-- Weight Selector -->
+                <div class="mb-4">
+                    <div style="font-size:13px;font-weight:600;color:var(--text-dark);margin-bottom:10px;">Select Weight:</div>
+                    <div class="weight-selector" id="weight-selector">
+                        @foreach (var w in p.Weights)
+                        {
+                            <button class="weight-btn @(!w.IsAvailable ? "unavailable" : "") @(w == firstWeight ? "active" : "")"
+                                    @(!w.IsAvailable ? "disabled" : "")
+                                    data-weight="@w.Label"
+                                    data-price="@w.Price"
+                                    data-original="@(w.OriginalPrice?.ToString("F0") ?? "")"
+                                    onclick="selectWeight(this)"
+                                    type="button">
+                                @w.Label
+                                <div style="font-size:10px;font-weight:500;opacity:.75;">₹@w.Price.ToString("F0")</div>
+                            </button>
+                        }
+                    </div>
+                </div>
+
+                <!-- Quantity + Add to Cart -->
+                <div class="d-flex align-items-center gap-3 mb-4 flex-wrap">
+                    <div class="qty-control">
+                        <button class="qty-btn" onclick="changeQty(-1)" type="button" aria-label="Decrease quantity">−</button>
+                        <input type="number" id="qty-input" value="1" min="1" max="99"
+                               class="qty-display" onchange="validateQty(this)" aria-label="Quantity" />
+                        <button class="qty-btn" onclick="changeQty(1)" type="button" aria-label="Increase quantity">+</button>
+                    </div>
+                    <button class="btn-primary-brand" id="add-to-cart-btn"
+                            onclick="addToCartFromDetail()"
+                            style="flex:1;justify-content:center;min-width:180px;"
+                            @(!p.IsAvailable ? "disabled" : "")>
+                        <i class="bi bi-bag-plus-fill"></i> Add to Cart
+                    </button>
+                </div>
+
+                <!-- WhatsApp Direct Order -->
+                <a id="whatsapp-order-btn"
+                   href="https://wa.me/@settings.WhatsAppNumber?text=Hello!%20I%20want%20to%20order%20@Uri.EscapeDataString(p.Name)%20(@(firstWeight?.Label ?? "")%20x1)%20from%20Marwadi%20Ghee%20Sweets%2C%20Guntur."
+                   target="_blank" rel="noopener"
+                   class="btn-whatsapp"
+                   style="width:100%;justify-content:center;padding:14px;font-size:15px;margin-bottom:24px;">
+                    <i class="bi bi-whatsapp" style="font-size:18px;"></i>
+                    Order this Directly on WhatsApp
+                </a>
+
+                <!-- USP Strip -->
+                <div style="background:var(--cream);border:1px solid var(--border);border-radius:var(--radius);padding:16px;display:flex;gap:20px;flex-wrap:wrap;justify-content:space-around;">
+                    <div style="text-align:center;font-size:12px;">
+                        <div style="font-size:22px;margin-bottom:4px;">🫙</div>
+                        <div style="font-weight:600;color:var(--text-dark);">Pure Ghee</div>
+                    </div>
+                    <div style="text-align:center;font-size:12px;">
+                        <div style="font-size:22px;margin-bottom:4px;">🌅</div>
+                        <div style="font-weight:600;color:var(--text-dark);">Made Fresh Daily</div>
+                    </div>
+                    <div style="text-align:center;font-size:12px;">
+                        <div style="font-size:22px;margin-bottom:4px;">🚚</div>
+                        <div style="font-weight:600;color:var(--text-dark);">Fast Delivery</div>
+                    </div>
+                    <div style="text-align:center;font-size:12px;">
+                        <div style="font-size:22px;margin-bottom:4px;">📦</div>
+                        <div style="font-weight:600;color:var(--text-dark);">Safe Packaging</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Product Info Tabs ───────────────────────────────────────── -->
+        <div class="mt-5">
+            <ul class="nav product-info-tabs border-bottom mb-4" id="productTabs" role="tablist">
+                <li class="nav-item">
+                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-ingredients" type="button" role="tab">
+                        Ingredients
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-storage" type="button" role="tab">
+                        Storage & Shelf Life
+                    </button>
+                </li>
+                @if (p.Allergens.Any())
+                {
+                    <li class="nav-item">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-allergens" type="button" role="tab">
+                            Allergens
+                        </button>
+                    </li>
+                }
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="tab-ingredients" role="tabpanel">
+                    <div style="margin-bottom:8px;font-size:13px;color:var(--text-muted);">
+                        Crafted with natural ingredients — no preservatives, no artificial flavours.
+                    </div>
+                    @foreach (var ing in p.Ingredients)
+                    {
+                        <span class="ingredient-tag">@ing</span>
+                    }
+                </div>
+                <div class="tab-pane fade" id="tab-storage" role="tabpanel">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div style="background:var(--cream);border:1px solid var(--border);border-radius:var(--radius);padding:20px;">
+                                <div style="font-weight:700;margin-bottom:6px;"><i class="bi bi-clock" style="color:var(--gold);"></i> Shelf Life</div>
+                                <p style="font-size:14px;color:var(--text-body);margin:0;">@p.ShelfLife</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div style="background:var(--cream);border:1px solid var(--border);border-radius:var(--radius);padding:20px;">
+                                <div style="font-weight:700;margin-bottom:6px;"><i class="bi bi-thermometer-half" style="color:var(--gold);"></i> Storage</div>
+                                <p style="font-size:14px;color:var(--text-body);margin:0;">@p.StorageInstructions</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @if (p.Allergens.Any())
+                {
+                    <div class="tab-pane fade" id="tab-allergens" role="tabpanel">
+                        <div style="background:#fff3cd;border:1px solid #ffc107;border-radius:var(--radius);padding:16px;margin-bottom:12px;font-size:13px;color:#7a5c00;">
+                            ⚠️ Please read allergen information carefully before purchasing.
+                        </div>
+                        @foreach (var al in p.Allergens)
+                        {
+                            <span class="allergen-tag">⚠️ @al</span>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- ── Related Products ────────────────────────────────────────── -->
+        @if (Model.RelatedProducts.Any())
+        {
+            <div class="mt-5 pt-4" style="border-top:1px solid var(--border);">
+                <h2 style="font-family:var(--font-serif);font-size:1.5rem;font-weight:700;color:var(--text-dark);margin-bottom:24px;">
+                    You Might Also Like
+                </h2>
+                <div class="row g-3">
+                    @foreach (var rp in Model.RelatedProducts)
+                    {
+                        <div class="col-6 col-sm-6 col-md-4 col-lg-3">
+                            @await Html.PartialAsync("_ProductCard", rp)
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</article>
+
+<!-- Mobile Sticky CTA -->
+<div class="mobile-sticky-cta">
+    <a href="https://wa.me/@settings.WhatsAppNumber" target="_blank" rel="noopener" class="btn-whatsapp" style="flex:1;justify-content:center;">
+        <i class="bi bi-whatsapp"></i> WhatsApp Order
+    </a>
+    <button class="btn-primary-brand" onclick="addToCartFromDetail()" style="flex:1;justify-content:center;" @(!p.IsAvailable ? "disabled" : "")>
+        <i class="bi bi-bag-plus-fill"></i> Add to Cart
+    </button>
+</div>
+
+@section Scripts {
+<script>
+const _productId    = '@p.Id';
+const _productSlug  = '@p.Slug';
+const _productName  = '@p.Name.Replace("'", "\\'")';
+const _productImage = '@p.PrimaryImage';
+
+let _selectedWeight = '@(firstWeight?.Label ?? "")';
+let _selectedPrice  = @(firstWeight?.Price ?? 0);
+
+function selectWeight(btn) {
+    document.querySelectorAll('.weight-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    _selectedWeight = btn.dataset.weight;
+    _selectedPrice  = parseFloat(btn.dataset.price);
+
+    document.getElementById('current-price').textContent = '₹' + _selectedPrice.toFixed(0);
+    const origEl = document.getElementById('original-price');
+    if (origEl) {
+        origEl.textContent = btn.dataset.original ? '₹' + btn.dataset.original : '';
+        origEl.style.display = btn.dataset.original ? 'inline' : 'none';
+    }
+
+    // Update WhatsApp link
+    const qty = parseInt(document.getElementById('qty-input').value) || 1;
+    updateWhatsAppLink(qty);
+}
+
+function changeQty(delta) {
+    const input = document.getElementById('qty-input');
+    const newVal = Math.max(1, (parseInt(input.value) || 1) + delta);
+    input.value = newVal;
+    updateWhatsAppLink(newVal);
+}
+
+function validateQty(input) {
+    const v = parseInt(input.value);
+    if (isNaN(v) || v < 1) input.value = 1;
+    updateWhatsAppLink(parseInt(input.value));
+}
+
+function updateWhatsAppLink(qty) {
+    const msg = encodeURIComponent(`Hello! I want to order ${_productName} (${_selectedWeight} × ${qty}) from Marwadi Ghee Sweets, Guntur. Total: ₹${(_selectedPrice * qty).toFixed(0)}`);
+    document.getElementById('whatsapp-order-btn').href = `https://wa.me/@settings.WhatsAppNumber?text=${msg}`;
+}
+
+function addToCartFromDetail() {
+    const qty = parseInt(document.getElementById('qty-input').value) || 1;
+    for (let i = 0; i < qty; i++) {
+        Cart.add(_productId, _productSlug, _productName, _productImage, _selectedWeight, _selectedPrice);
+    }
+    CartDrawer.open();
+}
+
+function switchImage(src, thumb) {
+    document.getElementById('gallery-main-img').src = src;
+    document.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('active'));
+    thumb.classList.add('active');
+}
+</script>
+}

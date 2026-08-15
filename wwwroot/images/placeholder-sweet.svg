@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" fill="none">
+  <rect width="300" height="300" fill="#fdf6e3"/>
+  <circle cx="150" cy="130" r="60" fill="#e8d5b0"/>
+  <text x="150" y="145" font-size="56" text-anchor="middle" dominant-baseline="middle">🍬</text>
+  <text x="150" y="210" font-size="14" fill="#7a5c4a" text-anchor="middle" font-family="Georgia, serif">Marwadi Ghee Sweets</text>
+  <text x="150" y="232" font-size="11" fill="#b8860b" text-anchor="middle" font-family="sans-serif">Guntur</text>
+</svg>

@@ -1,0 +1,115 @@
+@model List<MarwadiGheeSweetsWeb.Models.Category>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.PageTitle = "Categories";
+}
+
+<div class="row g-3">
+    <!-- Category list -->
+    <div class="col-lg-8">
+        <div class="admin-table">
+            <div class="p-3 border-bottom" style="font-weight:700;font-size:14px;">All Categories</div>
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Icon</th>
+                        <th>Name</th>
+                        <th class="d-none d-md-table-cell">Slug</th>
+                        <th class="d-none d-md-table-cell">Description</th>
+                        <th>Sort</th>
+                        <th style="width:100px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var cat in Model)
+                    {
+                        <tr>
+                            <td style="font-size:20px;">@cat.Icon</td>
+                            <td style="font-weight:600;font-size:13px;">@cat.Name</td>
+                            <td class="d-none d-md-table-cell" style="font-size:12px;color:#9ca3af;">@cat.Slug</td>
+                            <td class="d-none d-md-table-cell" style="font-size:12px;color:#6b7280;">@cat.Description</td>
+                            <td style="font-size:13px;">@cat.SortOrder</td>
+                            <td>
+                                <div class="d-flex gap-1">
+                                    <button class="btn btn-sm" style="border:1px solid #e5e7eb;font-size:11px;"
+                                            onclick="editCategory('@cat.Id','@cat.Name','@cat.Slug','@cat.Icon','@cat.Description',@cat.SortOrder)">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <form asp-action="DeleteCategory" asp-route-id="@cat.Id" method="post"
+                                          onsubmit="return confirm('Delete category \'@cat.Name\'?');">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm" style="border:1px solid #fca5a5;color:#dc2626;font-size:11px;">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Add / Edit form -->
+    <div class="col-lg-4">
+        <div class="form-card">
+            <div class="section-title" id="cat-form-title">Add Category</div>
+            <form asp-action="SaveCategory" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="Id" id="cat-id" value="" />
+
+                <div class="mb-3">
+                    <label class="form-label">Name *</label>
+                    <input name="Name" id="cat-name" class="form-control" placeholder="Ghee Sweets" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Slug</label>
+                    <input name="Slug" id="cat-slug" class="form-control" placeholder="ghee-sweets" />
+                    <small class="text-muted">Auto-generated if blank</small>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Icon (emoji)</label>
+                    <input name="Icon" id="cat-icon" class="form-control" placeholder="🫙" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Description</label>
+                    <input name="Description" id="cat-desc" class="form-control" placeholder="Short description" />
+                </div>
+                <div class="mb-4">
+                    <label class="form-label">Sort Order</label>
+                    <input name="SortOrder" id="cat-sort" type="number" min="0" class="form-control" value="10" />
+                </div>
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn" style="background:#800020;color:white;font-weight:700;">
+                        <i class="bi bi-floppy-fill"></i> Save Category
+                    </button>
+                    <button type="button" class="btn" style="border:1px solid #e5e7eb;color:#6b7280;" onclick="resetForm()">
+                        Clear
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+function editCategory(id, name, slug, icon, desc, sort) {
+    document.getElementById('cat-id').value   = id;
+    document.getElementById('cat-name').value = name;
+    document.getElementById('cat-slug').value = slug;
+    document.getElementById('cat-icon').value = icon;
+    document.getElementById('cat-desc').value = desc;
+    document.getElementById('cat-sort').value = sort;
+    document.getElementById('cat-form-title').textContent = 'Edit Category';
+    document.getElementById('cat-name').focus();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function resetForm() {
+    ['cat-id','cat-name','cat-slug','cat-icon','cat-desc'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('cat-sort').value = '10';
+    document.getElementById('cat-form-title').textContent = 'Add Category';
+}
+</script>
+}

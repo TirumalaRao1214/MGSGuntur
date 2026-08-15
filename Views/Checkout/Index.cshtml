@@ -1,0 +1,224 @@
+@model MarwadiGheeSweetsWeb.ViewModels.CheckoutViewModel
+@using MarwadiGheeSweetsWeb.Configuration
+@using Microsoft.Extensions.Options
+@inject IOptions<ShopSettings> ShopOptions
+@{
+    ViewBag.Title = "Checkout";
+    var settings = ShopOptions.Value;
+}
+
+<nav class="page-breadcrumb" aria-label="Breadcrumb">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/Cart">Cart</a></li>
+            <li class="breadcrumb-item active">Checkout</li>
+        </ol>
+    </div>
+</nav>
+
+<section class="py-5">
+    <div class="container">
+        <h1 style="font-family:var(--font-serif);font-size:2rem;font-weight:800;color:var(--text-dark);margin-bottom:8px;">Checkout</h1>
+        <p style="color:var(--text-muted);margin-bottom:32px;">Complete your order — we'll send it via WhatsApp for confirmation.</p>
+
+        <form id="checkout-form" action="/Checkout/PlaceOrder" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="cartJson" id="cart-json-input" value="" />
+
+            <div class="row g-4">
+                <!-- ── Customer Details ────────────────────────────────── -->
+                <div class="col-lg-7">
+
+                    <!-- Order Type -->
+                    <div class="checkout-section">
+                        <div class="checkout-section-title">Order Type</div>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <button type="button" class="order-type-btn active" id="btn-pickup" onclick="setOrderType('Pickup')">
+                                    <div style="font-size:28px;margin-bottom:8px;">🏪</div>
+                                    <div style="font-weight:700;font-size:15px;">Store Pickup</div>
+                                    <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Pick up at our Lalapet store</div>
+                                </button>
+                            </div>
+                            <div class="col-6">
+                                <button type="button" class="order-type-btn" id="btn-delivery" onclick="setOrderType('Delivery')">
+                                    <div style="font-size:28px;margin-bottom:8px;">🚚</div>
+                                    <div style="font-weight:700;font-size:15px;">Home Delivery</div>
+                                    <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Guntur area delivery</div>
+                                </button>
+                            </div>
+                        </div>
+                        <input type="hidden" name="Customer.OrderType" id="order-type-input" value="Pickup" />
+                    </div>
+
+                    <!-- Personal Details -->
+                    <div class="checkout-section">
+                        <div class="checkout-section-title">Your Details</div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="customer-name" style="font-size:13px;font-weight:600;color:var(--text-dark);margin-bottom:6px;display:block;">
+                                    Full Name *
+                                </label>
+                                <input type="text" id="customer-name" name="Customer.Name"
+                                       class="form-control-brand" placeholder="Your full name"
+                                       required value="@Model.Customer.Name" />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="customer-phone" style="font-size:13px;font-weight:600;color:var(--text-dark);margin-bottom:6px;display:block;">
+                                    Phone Number *
+                                </label>
+                                <input type="tel" id="customer-phone" name="Customer.Phone"
+                                       class="form-control-brand" placeholder="+91 98765 43210"
+                                       required value="@Model.Customer.Phone" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Delivery Address (shown only for Delivery) -->
+                    <div class="checkout-section" id="delivery-address-section" style="display:none;">
+                        <div class="checkout-section-title">Delivery Address</div>
+                        <textarea id="delivery-address" name="Customer.DeliveryAddress"
+                                  class="form-control-brand" rows="3"
+                                  placeholder="Full delivery address in Guntur..."
+                                  style="resize:vertical;">@Model.Customer.DeliveryAddress</textarea>
+                        <div style="font-size:12px;color:var(--gold);margin-top:6px;">
+                            📍 Delivery available within Guntur city. Delivery charge: ₹@settings.DeliveryCharge (free above ₹@settings.FreeShippingThreshold)
+                        </div>
+                    </div>
+
+                    <!-- Special Instructions -->
+                    <div class="checkout-section">
+                        <div class="checkout-section-title">Special Instructions <span style="font-weight:400;font-size:13px;color:var(--text-muted);">(optional)</span></div>
+                        <textarea name="Customer.SpecialInstructions"
+                                  class="form-control-brand" rows="2"
+                                  placeholder="Any special requests or notes for your order...">@Model.Customer.SpecialInstructions</textarea>
+                    </div>
+                </div>
+
+                <!-- ── Order Summary ───────────────────────────────────── -->
+                <div class="col-lg-5">
+                    <div class="cart-summary-box">
+                        <h3 style="font-family:var(--font-serif);font-size:1.2rem;font-weight:700;margin-bottom:20px;">Order Summary</h3>
+
+                        <div id="checkout-items-list" style="margin-bottom:16px;">
+                            <div style="text-align:center;padding:20px;color:var(--text-muted);font-size:13px;">
+                                Loading your items...
+                            </div>
+                        </div>
+
+                        <div class="cart-summary-row">
+                            <span>Subtotal</span>
+                            <span id="co-subtotal">₹0</span>
+                        </div>
+                        <div class="cart-summary-row">
+                            <span>Delivery</span>
+                            <span id="co-delivery">₹@settings.DeliveryCharge</span>
+                        </div>
+                        <div class="cart-total-row">
+                            <span>Grand Total</span>
+                            <span id="co-total" style="color:var(--burgundy);">₹0</span>
+                        </div>
+
+                        <div style="margin-top:20px;background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.3);border-radius:var(--radius);padding:16px;text-align:center;">
+                            <div style="font-size:13px;color:var(--text-body);margin-bottom:12px;">
+                                <strong>How it works:</strong><br>
+                                Tap below → WhatsApp opens with your order pre-filled → Hit Send ✅
+                            </div>
+                            <button type="submit" id="place-order-btn"
+                                    class="btn-whatsapp" style="width:100%;justify-content:center;font-size:16px;padding:14px;border:none;">
+                                <i class="bi bi-whatsapp" style="font-size:20px;"></i>
+                                Place Order on WhatsApp
+                            </button>
+                        </div>
+
+                        <!-- Store Info -->
+                        <div style="border-top:1px solid var(--border);margin-top:16px;padding-top:16px;font-size:12px;color:var(--text-muted);">
+                            <div style="margin-bottom:6px;"><i class="bi bi-geo-alt-fill" style="color:var(--gold);"></i> @settings.Address</div>
+                            <div style="margin-bottom:6px;"><i class="bi bi-clock-fill" style="color:var(--gold);"></i> @settings.StoreHours</div>
+                            <div><i class="bi bi-telephone-fill" style="color:var(--gold);"></i> <a href="tel:@settings.Phone" style="color:var(--burgundy);">@settings.Phone</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+@section Scripts {
+<script>
+const FREE_THRESHOLD  = @settings.FreeShippingThreshold;
+const DELIVERY_CHARGE = @settings.DeliveryCharge;
+
+function setOrderType(type) {
+    document.getElementById('order-type-input').value = type;
+    document.getElementById('btn-pickup').classList.toggle('active',    type === 'Pickup');
+    document.getElementById('btn-delivery').classList.toggle('active',  type === 'Delivery');
+    document.getElementById('delivery-address-section').style.display = type === 'Delivery' ? 'block' : 'none';
+    renderCheckoutSummary();
+}
+
+function renderCheckoutSummary() {
+    const items     = Cart.get();
+    const orderType = document.getElementById('order-type-input').value;
+    const sub       = items.reduce((s,i) => s + i.price * i.quantity, 0);
+    const delivery  = (orderType === 'Pickup') ? 0 : Cart.deliveryCharge(FREE_THRESHOLD, DELIVERY_CHARGE);
+    const total     = sub + delivery;
+
+    // Inject cart JSON for form submission
+    document.getElementById('cart-json-input').value = JSON.stringify(
+        items.map(i => ({
+            ProductId:   i.productId,
+            ProductSlug: i.productSlug,
+            ProductName: i.productName,
+            ImageUrl:    i.imageUrl,
+            WeightLabel: i.weightLabel,
+            Price:       i.price,
+            Quantity:    i.quantity
+        }))
+    );
+
+    // Items list
+    const listEl = document.getElementById('checkout-items-list');
+    if (items.length === 0) {
+        listEl.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted);">Your cart is empty. <a href="/sweets">Browse Sweets</a></div>';
+    } else {
+        listEl.innerHTML = items.map(i => `
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;">
+                <div style="flex:1;">
+                    <div style="font-weight:600;color:var(--text-dark);">${i.productName}</div>
+                    <div style="color:var(--gold);font-size:11px;">${i.weightLabel} × ${i.quantity}</div>
+                </div>
+                <div style="font-weight:700;color:var(--burgundy);">₹${(i.price * i.quantity).toFixed(0)}</div>
+            </div>`).join('');
+    }
+
+    document.getElementById('co-subtotal').textContent = '₹' + sub.toFixed(0);
+    document.getElementById('co-delivery').innerHTML   = delivery > 0
+        ? '₹' + delivery.toFixed(0)
+        : '<span style="color:green;font-weight:700;">FREE</span>';
+    document.getElementById('co-total').textContent = '₹' + total.toFixed(0);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    renderCheckoutSummary();
+
+    document.getElementById('checkout-form').addEventListener('submit', (e) => {
+        const items = Cart.get();
+        if (items.length === 0) {
+            e.preventDefault();
+            alert('Your cart is empty! Please add some sweets before checking out.');
+            return;
+        }
+        const name  = document.getElementById('customer-name').value.trim();
+        const phone = document.getElementById('customer-phone').value.trim();
+        if (!name || !phone) {
+            e.preventDefault();
+            alert('Please enter your name and phone number.');
+            return;
+        }
+        renderCheckoutSummary(); // Ensure cart JSON is up-to-date
+    });
+});
+</script>
+}

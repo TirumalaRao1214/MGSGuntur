@@ -1,0 +1,915 @@
+[
+  {
+    "Id": "prod-001",
+    "Slug": "ghee-mysore-pak",
+    "Name": "Ghee Mysore Pak",
+    "Category": "Ghee Sweets",
+    "CategorySlug": "ghee-sweets",
+    "ShortDescription": "The crown jewel of Marwadi Ghee Sweets \u2014 melt-in-mouth pure ghee Mysore Pak",
+    "Description": "Our legendary Ghee Mysore Pak is crafted using the finest desi ghee, gram flour, and sugar. Each piece is slow-cooked to achieve that iconic melt-in-mouth texture with a rich golden hue. This is the sweet Guntur swears by. Made fresh daily in small batches to maintain the authentic taste our customers have loved for generations.",
+    "Images": [
+      "/images/products/ghee-mysore-pak.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/7/79/Mysore_Pak.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/7/79/Mysore_Pak.jpg"
+    ],
+    "Weights": [
+      {
+        "Label": "250g",
+        "Price": 180,
+        "OriginalPrice": null,
+        "IsAvailable": true
+      },
+      {
+        "Label": "500g",
+        "Price": 350,
+        "OriginalPrice": 380,
+        "IsAvailable": true
+      },
+      {
+        "Label": "1kg",
+        "Price": 680,
+        "OriginalPrice": 750,
+        "IsAvailable": true
+      }
+    ],
+    "Rating": 4.8,
+    "ReviewCount": 412,
+    "Ingredients": [
+      "Pure Desi Ghee",
+      "Besan (Gram Flour)",
+      "Sugar",
+      "Cardamom"
+    ],
+    "Allergens": [
+      "Contains Dairy",
+      "Contains Gluten"
+    ],
+    "ShelfLife": "7\u201310 days at room temperature",
+    "StorageInstructions": "Store in a cool dry place. Refrigerate in summer.",
+    "IsAvailable": true,
+    "IsBestSeller": true,
+    "IsNew": false,
+    "IsFeatured": true,
+    "IsGiftItem": false,
+    "Badge": "Best Seller",
+    "SortOrder": 1,
+    "BasePrice": 180,
+    "OriginalBasePrice": null,
+    "PrimaryImage": "/images/products/ghee-mysore-pak.jpg"
+  },
+  {
+    "Id": "prod-002",
+    "Slug": "kaala-jamun",
+    "Name": "Kaala Jamun",
+    "Category": "Milk Sweets",
+    "CategorySlug": "milk-sweets",
+    "ShortDescription": "Deeply caramelised, syrup-soaked jamun \u2014 Guntur\u0027s favourite indulgence",
+    "Description": "Our Kaala Jamun is a darker, richer cousin of the classic Gulab Jamun. Made with khoya (mawa), maida and fried to a deep brown, then soaked overnight in fragrant sugar syrup. The result is an intensely rich, soft sweet that melts the moment it touches your tongue. A Marwadi Ghee Sweets speciality you cannot miss.",
+    "Images": [
+      "https://upload.wikimedia.org/wikipedia/commons/5/56/Gulab_Jamun.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/5/56/Gulab_Jamun.jpg"
+    ],
+    "Weights": [
+      {
+        "Label": "250g",
+        "Price": 160,
+        "OriginalPrice": null,
+        "IsAvailable": true
+      },
+      {
+        "Label": "500g",
+        "Price": 300,
+        "OriginalPrice": 330,
+        "IsAvailable": true
+      },
+      {
+        "Label": "1kg",
+        "Price": 580,
+        "OriginalPrice": 640,
+        "IsAvailable": true
+      }
+    ],
+    "Rating": 4.7,
+    "ReviewCount": 298,
+    "Ingredients": [
+      "Khoya (Mawa)",
+      "Maida",
+      "Sugar",
+      "Rose Water",
+      "Cardamom",
+      "Pure Ghee"
+    ],
+    "Allergens": [
+      "Contains Dairy",
+      "Contains Gluten"
+    ],
+    "ShelfLife": "5\u20137 days at room temperature",
+    "StorageInstructions": "Keep covered. Best consumed within 3 days.",
+    "IsAvailable": true,
+    "IsBestSeller": true,
+    "IsNew": false,
+    "IsFeatured": true,
+    "IsGiftItem": false,
+    "Badge": "Signature",
+    "SortOrder": 2,
+    "BasePrice": 160,
+    "OriginalBasePrice": null,
+    "PrimaryImage": "https://upload.wikimedia.org/wikipedia/commons/5/56/Gulab_Jamun.jpg"
+  },
+  {
+    "Id": "prod-003",
+    "Slug": "ghee-laddu",
+    "Name": "Ghee Besan Laddu",
+    "Category": "Ghee Sweets",
+    "CategorySlug": "ghee-sweets",
+    "ShortDescription": "Crumbly, aromatic besan laddu made with generous pure ghee",
+    "Description": "Slow-roasted gram flour in pure ghee, blended with powdered sugar and shaped by hand into perfect laddus. Aromatic, crumbly, and deeply satisfying \u2014 these are ideal for celebrations, puja offerings, and gifting.",
+    "Images": [
+      "https://upload.wikimedia.org/wikipedia/commons/2/21/Besan_ladoo.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/2/21/Besan_ladoo.jpg"
+    ],
+    "Weights": [
+      {
+        "Label": "250g",
+        "Price": 160,
+        "OriginalPrice": null,
+        "IsAvailable": true
+      },
+      {
+        "Label": "500g",
+        "Price": 300,
+        "OriginalPrice": null,
+        "IsAvailable": true
+      },
+      {
+        "Label": "1kg",
+        "Price": 580,
+        "OriginalPrice": 620,
+        "IsAvailable": true
+      }
+    ],
+    "Rating": 4.6,
+    "ReviewCount": 187,
+    "Ingredients": [
+      "Besan",
+      "Pure Ghee",
+      "Powdered Sugar",
+      "Cardamom",
+      "Cashews"
+    ],
+    "Allergens": [
+      "Contains Dairy",
+      "Contains Nuts",
+      "Contains Gluten"
+    ],
+    "ShelfLife": "15\u201320 days",
+    "StorageInstructions": "Store in an airtight container at room temperature.",
+    "IsAvailable": true,
+    "IsBestSeller": true,
+    "IsNew": false,
+    "IsFeatured": false,
+    "IsGiftItem": false,
+    "Badge": null,
+    "SortOrder": 3,
+    "BasePrice": 160,
+    "OriginalBasePrice": null,
+    "PrimaryImage": "https://upload.wikimedia.org/wikipedia/commons/2/21/Besan_ladoo.jpg"
+  },
+  {
+    "Id": "prod-004",
+    "Slug": "kaju-katli",
+    "Name": "Kaju Katli",
+    "Category": "Kaju Sweets",
+    "CategorySlug": "kaju-sweets",
+    "ShortDescription": "Premium diamond-cut cashew fudge \u2014 the king of Indian sweets",
+    "Description": "Pure cashew paste cooked with sugar syrup to a smooth, silky consistency and cut into classic diamond shapes. Our Kaju Katli uses only Grade-A cashews sourced from Goa, giving it an unmatched richness and a clean, fresh finish. Perfect for gifting and celebrations.",
+    "Images": [
+      "https://upload.wikimedia.org/wikipedia/commons/a/ac/Kaju_katli_sweet.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/a/ac/Kaju_katli_sweet.jpg"
+    ],
+    "Weights": [
+      {
+        "Label": "250g",
+        "Price": 280,
+        "OriginalPrice": null,
+        "IsAvailable": true
+      },
+      {
+        "Label": "500g",
+        "Price": 540,
+        "OriginalPrice": 580,
+        "IsAvailable": true
+      },
+      {
+        "Label": "1kg",
+        "Price": 1060,
+        "OriginalPrice": 1150,
+        "IsAvailable": true
+      }
+    ],
+    "Rating": 4.7,
+    "ReviewCount": 203,
+    "Ingredients": [
+      "Premium Cashews",
+      "Sugar",
+      "Rose Water",
+      "Cardamom"
+    ],
+    "Allergens": [
+      "Contains Nuts"
+    ],
+    "ShelfLife": "20\u201325 days",
+    "StorageInstructions": "Store in a cool dry place or refrigerate.",
+    "IsAvailable": true,
+    "IsBestSeller": true,
+    "IsNew": false,
+    "IsFeatured": true,
+    "IsGiftItem": true,
+    "Badge": "Premium",
+    "SortOrder": 4,
+    "BasePrice": 280,
+    "OriginalBasePrice": null,
+    "PrimaryImage": "https://upload.wikimedia.org/wikipedia/commons/a/ac/Kaju_katli_sweet.jpg"
+  },
+  {
+    "Id": "prod-005",
+    "Slug": "kalakand",
+    "Name": "Kalakand",
+    "Category": "Milk Sweets",
+    "CategorySlug": "milk-sweets",
+    "ShortDescription": "Grainy, cardamom-scented milk cake \u2014 soft and irresistibly rich",
+    "Description": "Kalakand is made by slowly reducing full-fat milk with sugar until it reaches a semi-solid, grainy consistency. Perfumed with cardamom and garnished with slivered pistachios, each piece is a rich celebration of milk at its finest. Our Kalakand has a beautiful moist texture that sets it apart.",
+    "Images": [
+      "https://upload.wikimedia.org/wikipedia/commons/8/8b/Kalakand.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/8/8b/Kalakand.jpg"
+    ],
+    "Weights": [
+      {
+        "Label": "250g",
+        "Price": 150,
+        "OriginalPrice": null,
+        "IsAvailable": true
+      },
+      {
+        "Label": "500g",
+        "Price": 280,
+        "OriginalPrice": 300,
+        "IsAvailable": true
+      },
+      {
+        "Label": "1kg",
+        "Price": 540,
+        "OriginalPrice": 580,
+        "IsAvailable": true
+      }
+    ],
+    "Rating": 4.5,
+    "ReviewCount": 142,
+    "Ingredients": [
+      "Full-Fat Milk",
+      "Sugar",
+      "Cardamom",
+      "Pistachios"
+    ],
+    "Allergens": [
+      "Contains Dairy",
+      "Contains Nuts"
+    ],
+    "ShelfLife": "4\u20135 days",
+    "StorageInstructions": "Refrigerate and consume within 5 days.",
+    "IsAvailable": true,
+    "IsBestSeller": false,
+    "IsNew": false,
+    "IsFeatured": true,
+    "IsGiftItem": false,
+    "Badge": null,
+    "SortOrder": 5,
+    "BasePrice": 150,
+    "OriginalBasePrice": null,
+    "PrimaryImage": "https://upload.wikimedia.org/wikipedia/commons/8/8b/Kalakand.jpg"
+  },
+  {
+    "Id": "prod-006",
+    "Slug": "motichur-laddu",
+    "Name": "Motichur Laddu",
+    "Category": "Traditional Sweets",
+    "CategorySlug": "traditional-sweets",
+    "ShortDescription": "Tiny golden boondi pearls bound together in a fragrant, celebratory laddu",
+    "Description": "Motichur Laddu is the sweet of celebrations \u2014 weddings, pujas, and festivals. Tiny fried boondi balls soaked in saffron-kissed sugar syrup, then formed into perfect spheres. Ours are fresh-made daily and have the ideal balance of sweetness and fragrance. The go-to laddu for festive occasions in Guntur.",
+    "Images": [
+      "https://upload.wikimedia.org/wikipedia/commons/1/15/Motichur_Laddu.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/1/15/Motichur_Laddu.jpg"
+    ],
+    "Weights": [
+      {
+        "Label": "250g",
+        "Price": 120,
+        "OriginalPrice": null,
+        "IsAvailable": true
+      },
+      {
+        "Label": "500g",
+        "Price": 230,
+        "OriginalPrice": null,
+        "IsAvailable": true
+      },
+      {
+        "Label": "1kg",
+        "Price": 440,
+        "OriginalPrice": 480,
+        "IsAvailable": true
+      }
+    ],
+    "Rating": 4.5,
+    "ReviewCount": 176,
+    "Ingredients": [
+      "Besan",
+      "Sugar",
+      "Ghee",
+      "Saffron",
+      "Cardamom",
+      "Cashews",
+      "Raisins"
+    ],
+    "Allergens": [
+      "Contains Dairy",
+      "Contains Gluten",
+      "Contains Nuts"
+    ],
+    "ShelfLife": "10\u201312 days",
+    "StorageInstructions": "Store in an airtight container.",
+    "IsAvailable": true,
+    "IsBestSeller": false,
+    "IsNew": false,
+    "IsFeatured": true,
+    "IsGiftItem": false,
+    "Badge": null,
+    "SortOrder": 6,
+    "BasePrice": 120,
+    "OriginalBasePrice": null,
+    "PrimaryImage": "https://upload.wikimedia.org/wikipedia/commons/1/15/Motichur_Laddu.jpg"
+  },
+  {
+    "Id": "prod-007",
+    "Slug": "jangri",
+    "Name": "Jangri (Imarti)",
+    "Category": "Traditional Sweets",
+    "CategorySlug": "traditional-sweets",
+    "ShortDescription": "Crispy, syrupy urad dal rings \u2014 a Guntur festival staple",
+    "Description": "Jangri is made from soaked urad dal batter piped into elaborate flower-ring patterns and fried to a beautiful orange-red, then dipped in sugar syrup. Crispy on the outside, spongy inside, and beautifully sweet. A beloved festive sweet that Marwadi Ghee Sweets makes fresh every morning.",
+    "Images": [
+      "https://upload.wikimedia.org/wikipedia/commons/a/a3/Imarti.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/a/a3/Imarti.jpg"
+    ],
+    "Weights": [
+      {
+        "Label": "250g",
+        "Price": 130,
+        "OriginalPrice": null,
+        "IsAvailable": true
+      },
+      {
+        "Label": "500g",
+        "Price": 250,
+        "OriginalPrice": 270,
+        "IsAvailable": true
+      },
+      {
+        "Label": "1kg",
+        "Price": 480,
+        "OriginalPrice": 520,
+        "IsAvailable": true
+      }
+    ],
+    "Rating": 4.4,
+    "ReviewCount": 98,
+    "Ingredients": [
+      "Urad Dal",
+      "Sugar",
+      "Ghee",
+      "Saffron",
+      "Cardamom"
+    ],
+    "Allergens": [
+      "Contains Dairy",
+      "Contains Gluten"
+    ],
+    "ShelfLife": "3\u20134 days",
+    "StorageInstructions": "Best consumed fresh. Keep at room temperature.",
+    "IsAvailable": true,
+    "IsBestSeller": false,
+    "IsNew": false,
+    "IsFeatured": false,
+    "IsGiftItem": false,
+    "Badge": null,
+    "SortOrder": 7,
+    "BasePrice": 130,
+    "OriginalBasePrice": null,
+    "PrimaryImage": "https://upload.wikimedia.org/wikipedia/commons/a/a3/Imarti.jpg"
+  },
+  {
+    "Id": "prod-008",
+    "Slug": "mixture",
+    "Name": "Telugu Mixture",
+    "Category": "Snacks \u0026 Namkeen",
+    "CategorySlug": "snacks",
+    "ShortDescription": "Guntur-style spicy mixture \u2014 a perfect teatime companion",
+    "Description": "A crispy, spicy blend of sev, fried peanuts, poha, curry leaves, and green chillies \u2014 seasoned in classic Telugu style with a bold, lingering heat. Made fresh in our kitchen using Guntur red chillies for that authentic kick. Once you start, it\u0027s impossible to stop.",
+    "Images": [
+      "https://upload.wikimedia.org/wikipedia/commons/8/8c/Namkeen.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/8/8c/Namkeen.jpg"
+    ],
+    "Weights": [
+      {
+        "Label": "200g",
+        "Price": 80,
+        "OriginalPrice": null,
+        "IsAvailable": true
+      },
+      {
+        "Label": "500g",
+        "Price": 180,
+        "OriginalPrice": 200,
+        "IsAvailable": true
+      },
+      {
+        "Label": "1kg",
+        "Price": 340,
+        "OriginalPrice": 380,
+        "IsAvailable": true
+      }
+    ],
+    "Rating": 4.5,
+    "ReviewCount": 134,
+    "Ingredients": [
+      "Besan Sev",
+      "Peanuts",
+      "Poha",
+      "Curry Leaves",
+      "Green Chillies",
+      "Sunflower Oil",
+      "Salt",
+      "Spices"
+    ],
+    "Allergens": [
+      "Contains Gluten",
+      "Contains Nuts"
+    ],
+    "ShelfLife": "30 days",
+    "StorageInstructions": "Store in an airtight container away from moisture.",
+    "IsAvailable": true,
+    "IsBestSeller": false,
+    "IsNew": false,
+    "IsFeatured": false,
+    "IsGiftItem": false,
+    "Badge": "Spicy",
+    "SortOrder": 8,
+    "BasePrice": 80,
+    "OriginalBasePrice": null,
+    "PrimaryImage": "https://upload.wikimedia.org/wikipedia/commons/8/8c/Namkeen.jpg"
+  },
+  {
+    "Id": "prod-009",
+    "Slug": "murukku",
+    "Name": "Butter Murukku",
+    "Category": "Snacks \u0026 Namkeen",
+    "CategorySlug": "snacks",
+    "ShortDescription": "Crunchy rice-flour spirals made with butter and cumin",
+    "Description": "Our Butter Murukku is made from rice flour and urad dal flour, flavoured with cumin and sesame seeds, and fried to a perfect crisp in fresh oil. Buttery, light, and addictively crunchy. A must-have in any South Indian snack hamper.",
+    "Images": [
+      "https://upload.wikimedia.org/wikipedia/commons/9/9a/Murukku.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/9/9a/Murukku.jpg"
+    ],
+    "Weights": [
+      {
+        "Label": "200g",
+        "Price": 70,
+        "OriginalPrice": null,
+        "IsAvailable": true
+      },
+      {
+        "Label": "500g",
+        "Price": 160,
+        "OriginalPrice": 175,
+        "IsAvailable": true
+      },
+      {
+        "Label": "1kg",
+        "Price": 300,
+        "OriginalPrice": 340,
+        "IsAvailable": true
+      }
+    ],
+    "Rating": 4.4,
+    "ReviewCount": 89,
+    "Ingredients": [
+      "Rice Flour",
+      "Urad Dal Flour",
+      "Butter",
+      "Cumin",
+      "Sesame Seeds",
+      "Salt"
+    ],
+    "Allergens": [
+      "Contains Dairy",
+      "Contains Gluten"
+    ],
+    "ShelfLife": "30 days",
+    "StorageInstructions": "Store in an airtight container.",
+    "IsAvailable": true,
+    "IsBestSeller": false,
+    "IsNew": false,
+    "IsFeatured": false,
+    "IsGiftItem": false,
+    "Badge": null,
+    "SortOrder": 9,
+    "BasePrice": 70,
+    "OriginalBasePrice": null,
+    "PrimaryImage": "https://upload.wikimedia.org/wikipedia/commons/9/9a/Murukku.jpg"
+  },
+  {
+    "Id": "prod-010",
+    "Slug": "premium-almonds",
+    "Name": "Premium California Almonds",
+    "Category": "Dry Fruits",
+    "CategorySlug": "dry-fruits",
+    "ShortDescription": "Hand-picked premium California almonds \u2014 crunchy and nutrition-packed",
+    "Description": "Large, crunchy California almonds sourced from premium farms. Rich in protein, healthy fats, and vitamins. Perfect for gifting, snacking, or adding to sweets. Our almonds are stored in temperature-controlled conditions to ensure freshness.",
+    "Images": [
+      "https://upload.wikimedia.org/wikipedia/commons/6/63/Badam.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/6/63/Badam.jpg"
+    ],
+    "Weights": [
+      {
+        "Label": "250g",
+        "Price": 220,
+        "OriginalPrice": null,
+        "IsAvailable": true
+      },
+      {
+        "Label": "500g",
+        "Price": 420,
+        "OriginalPrice": 460,
+        "IsAvailable": true
+      },
+      {
+        "Label": "1kg",
+        "Price": 820,
+        "OriginalPrice": 900,
+        "IsAvailable": true
+      }
+    ],
+    "Rating": 4.6,
+    "ReviewCount": 67,
+    "Ingredients": [
+      "100% Natural California Almonds"
+    ],
+    "Allergens": [
+      "Contains Nuts"
+    ],
+    "ShelfLife": "6 months",
+    "StorageInstructions": "Store in a cool dry place. Refrigerate for extended shelf life.",
+    "IsAvailable": true,
+    "IsBestSeller": false,
+    "IsNew": false,
+    "IsFeatured": false,
+    "IsGiftItem": true,
+    "Badge": null,
+    "SortOrder": 10,
+    "BasePrice": 220,
+    "OriginalBasePrice": null,
+    "PrimaryImage": "https://upload.wikimedia.org/wikipedia/commons/6/63/Badam.jpg"
+  },
+  {
+    "Id": "prod-011",
+    "Slug": "festival-sweet-box",
+    "Name": "Festival Sweet Box",
+    "Category": "Gift Hampers",
+    "CategorySlug": "gift-hampers",
+    "ShortDescription": "Curated box of our finest sweets \u2014 perfect for Diwali, Ugadi \u0026 all celebrations",
+    "Description": "Our Festival Sweet Box is a handpicked selection of Marwadi Ghee Sweets\u0027 most-loved products \u2014 Ghee Mysore Pak, Kaju Katli, Motichur Laddu, and Kaala Jamun \u2014 elegantly packed in a premium gift box. Makes the perfect gift for friends, family, and corporate clients during festive seasons.",
+    "Images": [
+      "https://upload.wikimedia.org/wikipedia/commons/1/13/Mithai.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/1/13/Mithai.jpg"
+    ],
+    "Weights": [
+      {
+        "Label": "500g Box",
+        "Price": 450,
+        "OriginalPrice": 520,
+        "IsAvailable": true
+      },
+      {
+        "Label": "1kg Box",
+        "Price": 850,
+        "OriginalPrice": 980,
+        "IsAvailable": true
+      },
+      {
+        "Label": "2kg Box",
+        "Price": 1600,
+        "OriginalPrice": 1900,
+        "IsAvailable": true
+      }
+    ],
+    "Rating": 4.8,
+    "ReviewCount": 156,
+    "Ingredients": [
+      "Ghee Mysore Pak",
+      "Kaju Katli",
+      "Motichur Laddu",
+      "Kaala Jamun"
+    ],
+    "Allergens": [
+      "Contains Dairy",
+      "Contains Nuts",
+      "Contains Gluten"
+    ],
+    "ShelfLife": "7 days",
+    "StorageInstructions": "Refrigerate contents. Consume within 7 days of purchase.",
+    "IsAvailable": true,
+    "IsBestSeller": true,
+    "IsNew": false,
+    "IsFeatured": true,
+    "IsGiftItem": true,
+    "Badge": "Gift Box",
+    "SortOrder": 11,
+    "BasePrice": 450,
+    "OriginalBasePrice": 520,
+    "PrimaryImage": "https://upload.wikimedia.org/wikipedia/commons/1/13/Mithai.jpg"
+  },
+  {
+    "Id": "prod-012",
+    "Slug": "corporate-gift-box",
+    "Name": "Corporate Gift Box",
+    "Category": "Gift Hampers",
+    "CategorySlug": "gift-hampers",
+    "ShortDescription": "Premium branded sweet hamper ideal for corporate gifting",
+    "Description": "Impress clients and employees with our elegant Corporate Gift Box \u2014 customisable with your company name or message. Contains a premium mix of Kaju Katli, Ghee Mysore Pak, Badam Halwa, and assorted dry fruits. Available in multiple sizes for bulk orders.",
+    "Images": [
+      "https://upload.wikimedia.org/wikipedia/commons/7/77/Sweet_box.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/7/77/Sweet_box.jpg"
+    ],
+    "Weights": [
+      {
+        "Label": "750g Box",
+        "Price": 650,
+        "OriginalPrice": 750,
+        "IsAvailable": true
+      },
+      {
+        "Label": "1.5kg Box",
+        "Price": 1200,
+        "OriginalPrice": 1400,
+        "IsAvailable": true
+      },
+      {
+        "Label": "3kg Box",
+        "Price": 2200,
+        "OriginalPrice": 2600,
+        "IsAvailable": true
+      }
+    ],
+    "Rating": 4.7,
+    "ReviewCount": 88,
+    "Ingredients": [
+      "Kaju Katli",
+      "Ghee Mysore Pak",
+      "Badam Halwa",
+      "Assorted Dry Fruits"
+    ],
+    "Allergens": [
+      "Contains Dairy",
+      "Contains Nuts",
+      "Contains Gluten"
+    ],
+    "ShelfLife": "10 days",
+    "StorageInstructions": "Keep refrigerated.",
+    "IsAvailable": true,
+    "IsBestSeller": false,
+    "IsNew": false,
+    "IsFeatured": true,
+    "IsGiftItem": true,
+    "Badge": "Corporate",
+    "SortOrder": 12,
+    "BasePrice": 650,
+    "OriginalBasePrice": 750,
+    "PrimaryImage": "https://upload.wikimedia.org/wikipedia/commons/7/77/Sweet_box.jpg"
+  },
+  {
+    "Id": "prod-013",
+    "Slug": "badam-halwa",
+    "Name": "Badam Halwa",
+    "Category": "Ghee Sweets",
+    "CategorySlug": "ghee-sweets",
+    "ShortDescription": "Luxuriously rich almond halwa slow-cooked in pure ghee",
+    "Description": "A regal sweet made by slow-cooking soaked and ground almonds with sugar and pure ghee until it reaches a smooth, glossy halwa. Perfumed with saffron and cardamom, each spoonful is intensely rich and deeply satisfying. A premium festive sweet that signals luxury.",
+    "Images": [
+      "https://upload.wikimedia.org/wikipedia/commons/4/4b/Badam_halwa.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/4/4b/Badam_halwa.jpg"
+    ],
+    "Weights": [
+      {
+        "Label": "250g",
+        "Price": 320,
+        "OriginalPrice": null,
+        "IsAvailable": true
+      },
+      {
+        "Label": "500g",
+        "Price": 620,
+        "OriginalPrice": 680,
+        "IsAvailable": true
+      }
+    ],
+    "Rating": 4.7,
+    "ReviewCount": 114,
+    "Ingredients": [
+      "Almonds",
+      "Pure Ghee",
+      "Sugar",
+      "Saffron",
+      "Cardamom",
+      "Milk"
+    ],
+    "Allergens": [
+      "Contains Dairy",
+      "Contains Nuts"
+    ],
+    "ShelfLife": "10\u201312 days",
+    "StorageInstructions": "Refrigerate and warm slightly before serving.",
+    "IsAvailable": true,
+    "IsBestSeller": false,
+    "IsNew": false,
+    "IsFeatured": false,
+    "IsGiftItem": true,
+    "Badge": "Premium",
+    "SortOrder": 13,
+    "BasePrice": 320,
+    "OriginalBasePrice": null,
+    "PrimaryImage": "https://upload.wikimedia.org/wikipedia/commons/4/4b/Badam_halwa.jpg"
+  },
+  {
+    "Id": "prod-014",
+    "Slug": "pootharekulu",
+    "Name": "Pootharekulu",
+    "Category": "Traditional Sweets",
+    "CategorySlug": "traditional-sweets",
+    "ShortDescription": "Andhra\u0027s paper-thin rice starch sweet \u2014 a true regional delicacy",
+    "Description": "Pootharekulu \u2014 meaning \u0027coated leaves\u0027 \u2014 is a unique Andhra sweet made from water-thin rice starch sheets layered with ghee, sugar, and dry fruits. Incredibly delicate, crispy, and melt-in-mouth. This is a rare specialty that Marwadi Ghee Sweets keeps alive with traditional techniques.",
+    "Images": [
+      "https://upload.wikimedia.org/wikipedia/commons/9/94/Pootharekulu_1.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/9/94/Pootharekulu_1.jpg"
+    ],
+    "Weights": [
+      {
+        "Label": "250g",
+        "Price": 200,
+        "OriginalPrice": null,
+        "IsAvailable": true
+      },
+      {
+        "Label": "500g",
+        "Price": 380,
+        "OriginalPrice": 420,
+        "IsAvailable": true
+      }
+    ],
+    "Rating": 4.8,
+    "ReviewCount": 72,
+    "Ingredients": [
+      "Rice Starch",
+      "Pure Ghee",
+      "Sugar",
+      "Cashews",
+      "Cardamom"
+    ],
+    "Allergens": [
+      "Contains Dairy",
+      "Contains Nuts",
+      "Contains Gluten"
+    ],
+    "ShelfLife": "10\u201315 days",
+    "StorageInstructions": "Keep in a dry airtight container. Do not refrigerate.",
+    "IsAvailable": true,
+    "IsBestSeller": false,
+    "IsNew": true,
+    "IsFeatured": true,
+    "IsGiftItem": false,
+    "Badge": "Andhra Special",
+    "SortOrder": 14,
+    "BasePrice": 200,
+    "OriginalBasePrice": null,
+    "PrimaryImage": "https://upload.wikimedia.org/wikipedia/commons/9/94/Pootharekulu_1.jpg"
+  },
+  {
+    "Id": "prod-015",
+    "Slug": "gulab-jamun",
+    "Name": "Gulab Jamun",
+    "Category": "Milk Sweets",
+    "CategorySlug": "milk-sweets",
+    "ShortDescription": "Soft, pillowy milk-solid balls soaked in rose-cardamom syrup",
+    "Description": "Classic Gulab Jamun made the old-fashioned way \u2014 with khoya, a touch of maida, and gently fried to a warm golden brown. Soaked in fragrant rose and cardamom syrup. Served fresh daily. A timeless crowd-pleaser for all occasions.",
+    "Images": [
+      "https://upload.wikimedia.org/wikipedia/commons/5/56/Gulab_Jamun.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/5/56/Gulab_Jamun.jpg"
+    ],
+    "Weights": [
+      {
+        "Label": "250g",
+        "Price": 140,
+        "OriginalPrice": null,
+        "IsAvailable": true
+      },
+      {
+        "Label": "500g",
+        "Price": 260,
+        "OriginalPrice": 280,
+        "IsAvailable": true
+      },
+      {
+        "Label": "1kg",
+        "Price": 500,
+        "OriginalPrice": 540,
+        "IsAvailable": true
+      }
+    ],
+    "Rating": 4.5,
+    "ReviewCount": 201,
+    "Ingredients": [
+      "Khoya",
+      "Maida",
+      "Sugar",
+      "Rose Water",
+      "Cardamom"
+    ],
+    "Allergens": [
+      "Contains Dairy",
+      "Contains Gluten"
+    ],
+    "ShelfLife": "5\u20136 days",
+    "StorageInstructions": "Keep at room temperature for 2 days, refrigerate after.",
+    "IsAvailable": true,
+    "IsBestSeller": false,
+    "IsNew": false,
+    "IsFeatured": false,
+    "IsGiftItem": false,
+    "Badge": null,
+    "SortOrder": 15,
+    "BasePrice": 140,
+    "OriginalBasePrice": null,
+    "PrimaryImage": "https://upload.wikimedia.org/wikipedia/commons/5/56/Gulab_Jamun.jpg"
+  },
+  {
+    "Id": "prod-016",
+    "Slug": "chegodilu",
+    "Name": "Chegodilu",
+    "Category": "Snacks \u0026 Namkeen",
+    "CategorySlug": "snacks",
+    "ShortDescription": "Crispy Andhra-style rice rings \u2014 a beloved tea-time snack",
+    "Description": "Chegodilu are traditional Andhra savoury rings made from rice flour seasoned with cumin, sesame, and a touch of chilli. Deep-fried to a satisfying crunch. Generations of families in Guntur have grown up snacking on these. Our recipe is unapologetically authentic.",
+    "Images": [
+      "https://upload.wikimedia.org/wikipedia/commons/7/73/Chakli.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/7/73/Chakli.jpg"
+    ],
+    "Weights": [
+      {
+        "Label": "200g",
+        "Price": 60,
+        "OriginalPrice": null,
+        "IsAvailable": true
+      },
+      {
+        "Label": "500g",
+        "Price": 140,
+        "OriginalPrice": 150,
+        "IsAvailable": true
+      }
+    ],
+    "Rating": 4.3,
+    "ReviewCount": 56,
+    "Ingredients": [
+      "Rice Flour",
+      "Urad Dal",
+      "Cumin",
+      "Sesame Seeds",
+      "Salt",
+      "Green Chilli"
+    ],
+    "Allergens": [
+      "Contains Gluten"
+    ],
+    "ShelfLife": "30 days",
+    "StorageInstructions": "Store in an airtight container.",
+    "IsAvailable": true,
+    "IsBestSeller": false,
+    "IsNew": true,
+    "IsFeatured": false,
+    "IsGiftItem": false,
+    "Badge": "New",
+    "SortOrder": 16,
+    "BasePrice": 60,
+    "OriginalBasePrice": null,
+    "PrimaryImage": "https://upload.wikimedia.org/wikipedia/commons/7/73/Chakli.jpg"
+  }
+]

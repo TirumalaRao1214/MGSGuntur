@@ -1,0 +1,232 @@
+@using System.Security.Claims
+@{
+    var username    = User.FindFirst(ClaimTypes.Name)?.Value ?? "User";
+    var displayName = User.FindFirst(ClaimTypes.GivenName)?.Value ?? username;
+    var role        = User.FindFirst(ClaimTypes.Role)?.Value ?? "";
+    var isOwner     = role == "Owner";
+    var pageTitle   = ViewBag.PageTitle as string ?? "Admin Panel";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@pageTitle — Marwadi Ghee Sweets Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <style>
+        :root {
+            --sidebar-bg: #1a0a05;
+            --sidebar-accent: #b8860b;
+            --sidebar-text: rgba(255,255,255,.85);
+            --sidebar-hover: rgba(184,134,11,.15);
+            --sidebar-active: rgba(184,134,11,.25);
+            --sidebar-width: 240px;
+        }
+        body { background: #f5f5f5; font-family: -apple-system, "Segoe UI", sans-serif; }
+
+        /* Sidebar */
+        .admin-sidebar {
+            position: fixed; top: 0; left: 0; bottom: 0;
+            width: var(--sidebar-width);
+            background: var(--sidebar-bg);
+            display: flex; flex-direction: column;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        .sidebar-brand {
+            padding: 20px 16px 16px;
+            border-bottom: 1px solid rgba(255,255,255,.08);
+            text-decoration: none;
+        }
+        .sidebar-brand-title { color: var(--sidebar-accent); font-weight: 700; font-size: 15px; line-height: 1.2; }
+        .sidebar-brand-sub   { color: rgba(255,255,255,.4); font-size: 11px; }
+        .sidebar-role-badge  {
+            display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: 700;
+            background: var(--sidebar-accent); color: #1a0a05; margin-top: 6px;
+        }
+        .sidebar-nav { flex: 1; padding: 12px 0; }
+        .sidebar-section-label {
+            padding: 8px 16px 4px;
+            font-size: 10px; font-weight: 700; letter-spacing: .1em;
+            color: rgba(255,255,255,.3); text-transform: uppercase;
+        }
+        .sidebar-link {
+            display: flex; align-items: center; gap: 10px;
+            padding: 9px 16px;
+            color: var(--sidebar-text); text-decoration: none;
+            font-size: 13.5px; transition: background .15s;
+            border-radius: 0;
+        }
+        .sidebar-link:hover  { background: var(--sidebar-hover); color: white; }
+        .sidebar-link.active { background: var(--sidebar-active); color: var(--sidebar-accent); font-weight: 600; }
+        .sidebar-link i      { width: 18px; text-align: center; font-size: 14px; opacity: .8; }
+        .sidebar-link.active i { opacity: 1; }
+        .sidebar-footer {
+            padding: 12px 16px;
+            border-top: 1px solid rgba(255,255,255,.08);
+            font-size: 12px; color: rgba(255,255,255,.4);
+        }
+        .sidebar-user { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+        .sidebar-avatar {
+            width: 32px; height: 32px; border-radius: 50%;
+            background: var(--sidebar-accent); color: #1a0a05;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 13px; flex-shrink: 0;
+        }
+        .sidebar-user-name  { font-size: 13px; color: rgba(255,255,255,.8); font-weight: 600; }
+        .sidebar-user-role  { font-size: 11px; color: rgba(255,255,255,.35); }
+
+        /* Main content */
+        .admin-main {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex; flex-direction: column;
+        }
+        .admin-topbar {
+            background: white; border-bottom: 1px solid #e5e7eb;
+            padding: 12px 24px;
+            display: flex; align-items: center; justify-content: space-between;
+            position: sticky; top: 0; z-index: 100;
+        }
+        .admin-topbar-title { font-weight: 700; font-size: 16px; color: #1f2328; }
+        .admin-content { padding: 24px; flex: 1; }
+
+        /* Cards */
+        .stat-card {
+            background: white; border-radius: 10px; padding: 20px;
+            border: 1px solid #e5e7eb;
+        }
+        .stat-card .stat-value { font-size: 2rem; font-weight: 800; color: #800020; }
+        .stat-card .stat-label { font-size: 12px; color: #6b7280; margin-top: 2px; }
+        .stat-card .stat-icon  { font-size: 28px; opacity: .6; }
+
+        /* Table */
+        .admin-table { background: white; border-radius: 10px; border: 1px solid #e5e7eb; overflow: hidden; }
+        .admin-table .table { margin: 0; }
+        .admin-table .table th { background: #f9fafb; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: #6b7280; border-bottom: 1px solid #e5e7eb; }
+        .admin-table .table td { vertical-align: middle; font-size: 13.5px; }
+
+        /* Form card */
+        .form-card { background: white; border-radius: 10px; border: 1px solid #e5e7eb; padding: 28px; }
+        .form-card .form-label { font-weight: 600; font-size: 13px; }
+        .section-title { font-size: 13px; font-weight: 700; color: #800020; border-bottom: 2px solid #800020; padding-bottom: 4px; margin-bottom: 16px; }
+
+        /* Badges */
+        .role-badge-owner { background: #7c3aed; color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 700; }
+        .role-badge-admin { background: #1d4ed8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 700; }
+
+        /* Mobile toggle */
+        @@media (max-width: 768px) {
+            .admin-sidebar { transform: translateX(-100%); transition: transform .25s; }
+            .admin-sidebar.open { transform: translateX(0); }
+            .admin-main { margin-left: 0; }
+            .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 999; }
+            .sidebar-overlay.open { display: block; }
+        }
+    </style>
+</head>
+<body>
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+<!-- Sidebar -->
+<nav class="admin-sidebar" id="admin-sidebar">
+    <a href="@(isOwner ? "/owner" : "/admin")" class="sidebar-brand d-flex flex-column" style="text-decoration:none;">
+        <div style="font-size:22px;margin-bottom:4px;">🍬</div>
+        <div class="sidebar-brand-title">Marwadi Ghee Sweets</div>
+        <div class="sidebar-brand-sub">Management Panel</div>
+        <span class="sidebar-role-badge">@role</span>
+    </a>
+
+    <div class="sidebar-nav">
+        @if (isOwner)
+        {
+            <div class="sidebar-section-label">Owner</div>
+            <a href="/owner" class="sidebar-link @(Context.Request.Path == "/owner" ? "active" : "")">
+                <i class="bi bi-speedometer2"></i> Dashboard
+            </a>
+            <a href="/owner/settings" class="sidebar-link @(Context.Request.Path.StartsWithSegments("/owner/settings") ? "active" : "")">
+                <i class="bi bi-gear-fill"></i> Shop Settings
+            </a>
+            <a href="/owner/users" class="sidebar-link @(Context.Request.Path.StartsWithSegments("/owner/users") ? "active" : "")">
+                <i class="bi bi-people-fill"></i> Manage Users
+            </a>
+            <div style="height:1px;background:rgba(255,255,255,.07);margin:8px 0;"></div>
+        }
+
+        <div class="sidebar-section-label">Catalogue</div>
+        <a href="/admin" class="sidebar-link @(Context.Request.Path == "/admin" && !isOwner ? "active" : "")">
+            <i class="bi bi-grid-fill"></i> Dashboard
+        </a>
+        <a href="/admin/products" class="sidebar-link @(Context.Request.Path.StartsWithSegments("/admin/products") ? "active" : "")">
+            <i class="bi bi-bag-heart-fill"></i> Products
+        </a>
+        <a href="/admin/categories" class="sidebar-link @(Context.Request.Path.StartsWithSegments("/admin/categories") ? "active" : "")">
+            <i class="bi bi-tags-fill"></i> Categories
+        </a>
+
+        <div style="height:1px;background:rgba(255,255,255,.07);margin:8px 0;"></div>
+        <div class="sidebar-section-label">Store</div>
+        <a href="/" target="_blank" class="sidebar-link">
+            <i class="bi bi-shop"></i> View Storefront <i class="bi bi-box-arrow-up-right" style="font-size:10px;margin-left:auto;opacity:.5;"></i>
+        </a>
+    </div>
+
+    <div class="sidebar-footer">
+        <div class="sidebar-user">
+            <div class="sidebar-avatar">@displayName[0]</div>
+            <div>
+                <div class="sidebar-user-name">@displayName</div>
+                <div class="sidebar-user-role">@role</div>
+            </div>
+        </div>
+        <form asp-controller="Auth" asp-action="Logout" method="post">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-sm w-100" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.12);">
+                <i class="bi bi-box-arrow-left"></i> Sign Out
+            </button>
+        </form>
+    </div>
+</nav>
+
+<!-- Main -->
+<div class="admin-main">
+    <div class="admin-topbar">
+        <div style="display:flex;align-items:center;gap:12px;">
+            <button class="btn btn-sm d-md-none" onclick="openSidebar()" style="border:1px solid #e5e7eb;">
+                <i class="bi bi-list"></i>
+            </button>
+            <span class="admin-topbar-title">@pageTitle</span>
+        </div>
+        <a href="/" target="_blank" class="btn btn-sm" style="font-size:12px;border:1px solid #e5e7eb;color:#6b7280;">
+            <i class="bi bi-eye"></i> View Site
+        </a>
+    </div>
+
+    <div class="admin-content">
+        @if (TempData["Success"] is string success)
+        {
+            <div class="alert alert-success alert-dismissible fade show d-flex align-items-center gap-2" role="alert">
+                <i class="bi bi-check-circle-fill"></i> @success
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+        @if (TempData["Error"] is string error)
+        {
+            <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center gap-2" role="alert">
+                <i class="bi bi-exclamation-triangle-fill"></i> @error
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+        @RenderBody()
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function openSidebar()  { document.getElementById('admin-sidebar').classList.add('open'); document.getElementById('sidebar-overlay').classList.add('open'); }
+function closeSidebar() { document.getElementById('admin-sidebar').classList.remove('open'); document.getElementById('sidebar-overlay').classList.remove('open'); }
+</script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

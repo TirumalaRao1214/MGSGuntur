@@ -1,0 +1,67 @@
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.PageTitle = "Owner Dashboard";
+    var totalProducts  = (int)(ViewBag.TotalProducts  ?? 0);
+    var categoryCount  = (int)(ViewBag.CategoryCount  ?? 0);
+    var adminUserCount = (int)(ViewBag.AdminUserCount ?? 0);
+}
+
+<div class="row g-3 mb-4">
+    <div class="col-sm-4">
+        <div class="stat-card">
+            <div class="d-flex align-items-start justify-content-between">
+                <div>
+                    <div class="stat-value">@totalProducts</div>
+                    <div class="stat-label">Total Products</div>
+                </div>
+                <div class="stat-icon">🍬</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="stat-card">
+            <div class="d-flex align-items-start justify-content-between">
+                <div>
+                    <div class="stat-value" style="color:#7c3aed;">@categoryCount</div>
+                    <div class="stat-label">Categories</div>
+                </div>
+                <div class="stat-icon">🏷️</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="stat-card">
+            <div class="d-flex align-items-start justify-content-between">
+                <div>
+                    <div class="stat-value" style="color:#1d4ed8;">@adminUserCount</div>
+                    <div class="stat-label">Admin Users</div>
+                </div>
+                <div class="stat-icon">👤</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-md-6 col-lg-4">
+        <a href="/owner/settings" class="form-card d-block text-decoration-none" style="border-color:#800020;">
+            <div style="font-size:28px;margin-bottom:10px;">⚙️</div>
+            <div style="font-weight:700;color:#1f2328;margin-bottom:4px;">Shop Settings</div>
+            <div style="font-size:13px;color:#6b7280;">Edit shop name, WhatsApp number, delivery charges, contact info and more.</div>
+        </a>
+    </div>
+    <div class="col-md-6 col-lg-4">
+        <a href="/owner/users" class="form-card d-block text-decoration-none" style="border-color:#7c3aed;">
+            <div style="font-size:28px;margin-bottom:10px;">👥</div>
+            <div style="font-weight:700;color:#1f2328;margin-bottom:4px;">Manage Users</div>
+            <div style="font-size:13px;color:#6b7280;">Add or remove admin users. Control who can access the management panel.</div>
+        </a>
+    </div>
+    <div class="col-md-6 col-lg-4">
+        <a href="/admin/products" class="form-card d-block text-decoration-none" style="border-color:#16a34a;">
+            <div style="font-size:28px;margin-bottom:10px;">🛍️</div>
+            <div style="font-weight:700;color:#1f2328;margin-bottom:4px;">Manage Products</div>
+            <div style="font-size:13px;color:#6b7280;">Add, edit, delete products and toggle their availability in the store.</div>
+        </a>
+    </div>
+</div>

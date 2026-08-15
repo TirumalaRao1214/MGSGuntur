@@ -1,0 +1,113 @@
+@model MarwadiGheeSweetsWeb.Models.Product
+@{
+    var badgeClass = Model.Badge switch
+    {
+        "Best Seller"    => "badge-gold",
+        "Premium"        => "badge-gold",
+        "Signature"      => "badge-gold",
+        "Andhra Special" => "badge-green",
+        "Corporate"      => "badge-blue",
+        "New"            => "badge-green",
+        "Spicy"          => "badge-spicy",
+        _                => ""
+    };
+    var firstWeight = Model.Weights.FirstOrDefault(w => w.IsAvailable) ?? Model.Weights.FirstOrDefault();
+    var cardId      = "card-" + Model.Id;
+}
+<div class="product-card" id="@cardId">
+    <div class="product-card-img-wrap">
+        <!-- Badge -->
+        @if (!string.IsNullOrWhiteSpace(Model.Badge))
+        {
+            <span class="product-badge @badgeClass" aria-label="@Model.Badge">@Model.Badge</span>
+        }
+        else if (Model.IsNew)
+        {
+            <span class="product-badge badge-green">New</span>
+        }
+        <!-- Image -->
+        <a href="/sweets/@Model.Slug" aria-label="View @Model.Name details">
+            <img src="@Model.PrimaryImage"
+                 alt="@Model.Name — @Model.ShortDescription"
+                 loading="lazy"
+                 onerror="this.src='/images/placeholder-sweet.svg'"
+                 style="width:100%;height:100%;object-fit:cover;" />
+        </a>
+    </div>
+
+    <div class="product-card-body">
+        <div class="product-category-tag">@Model.Category</div>
+        <a href="/sweets/@Model.Slug" class="product-name d-block" style="text-decoration:none;color:inherit;">
+            @Model.Name
+        </a>
+        <p class="product-short-desc">@Model.ShortDescription</p>
+
+        <div class="product-rating">
+            <span class="stars" aria-label="@Model.Rating out of 5 stars">
+                @for (int i = 1; i <= 5; i++)
+                {
+                    <span style="color:@(i <= (int)Model.Rating ? "var(--gold)" : "var(--border)");">★</span>
+                }
+            </span>
+            <span class="rating-count">(@Model.ReviewCount)</span>
+        </div>
+
+        @if (Model.Weights.Count > 1)
+        {
+            <!-- Weight selector pills -->
+            <div class="card-weight-selector" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;">
+                @foreach (var w in Model.Weights)
+                {
+                    <button type="button"
+                            class="card-weight-btn @(w == firstWeight ? "active" : "") @(!w.IsAvailable ? "disabled" : "")"
+                            @(!w.IsAvailable ? "disabled" : "")
+                            data-card="@cardId"
+                            data-id="@Model.Id"
+                            data-slug="@Model.Slug"
+                            data-name="@Model.Name"
+                            data-image="@Model.PrimaryImage"
+                            data-label="@w.Label"
+                            data-price="@w.Price"
+                            data-original="@(w.OriginalPrice?.ToString("F0") ?? "")"
+                            onclick="cardSelectWeight(this)"
+                            aria-label="Select @w.Label">
+                        @w.Label
+                    </button>
+                }
+            </div>
+        }
+
+        <div class="product-price-row">
+            <div>
+                <span class="card-price" id="price-@cardId"
+                      style="font-family:var(--font-serif);font-size:1.25rem;font-weight:800;color:var(--burgundy);">
+                    ₹@(firstWeight?.Price.ToString("F0") ?? "0")
+                </span>
+                @if (firstWeight?.OriginalPrice.HasValue == true)
+                {
+                    <span class="card-original-price" id="orig-@cardId"
+                          style="font-size:13px;color:var(--text-muted);text-decoration:line-through;margin-left:4px;">
+                        ₹@firstWeight.OriginalPrice.Value.ToString("F0")
+                    </span>
+                }
+                else
+                {
+                    <span class="card-original-price" id="orig-@cardId"
+                          style="font-size:13px;color:var(--text-muted);text-decoration:line-through;margin-left:4px;display:none;"></span>
+                }
+                @if (Model.Weights.Count <= 1)
+                {
+                    <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">
+                        @(firstWeight?.Label ?? "")
+                    </div>
+                }
+            </div>
+            <button class="btn-add-to-cart"
+                    id="atc-@cardId"
+                    onclick="cardAddToCart('@cardId','@Model.Id','@Model.Slug','@Model.Name','@Model.PrimaryImage','@(firstWeight?.Label ?? "")',@(firstWeight?.Price ?? 0));"
+                    aria-label="Add @Model.Name to cart">
+                <i class="bi bi-bag-plus-fill"></i>
+            </button>
+        </div>
+    </div>
+</div>

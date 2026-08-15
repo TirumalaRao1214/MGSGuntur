@@ -1,0 +1,15 @@
+﻿## .NET / ASP.NET Core
+bin/
+obj/
+*.user
+*.suo
+.vs/
+artifacts/
+project.lock.json
+
+## Bob playground metadata
+.bob/
+
+## OS artefacts
+.DS_Store
+Thumbs.db
