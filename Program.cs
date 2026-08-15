@@ -55,10 +55,11 @@ app.Use(async (ctx, next) =>
     headers["Permissions-Policy"]     = "geolocation=(), microphone=(), camera=()";
     headers["Content-Security-Policy"] =
         "default-src 'self'; " +
-        "script-src 'self' 'unsafe-inline'; " +   // unsafe-inline needed for Bootstrap/jQuery
-        "style-src 'self' 'unsafe-inline'; " +
+        "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; " +
+        "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; " +
+        "font-src 'self' https://fonts.gstatic.com; " +
         "img-src 'self' data: https:; " +
-        "frame-src https://maps.google.com; " +
+        "frame-src https://maps.google.com https://www.google.com; " +
         "connect-src 'self'";
     await next();
 });
