@@ -110,9 +110,17 @@ public class AdminController : Controller
             return View("ProductForm", vm);
         }
 
+        // Capture existing images before overwriting, so we can delete old files.
+        var existing = await _products.GetByIdAsync(id);
+        var oldImages = existing?.Images ?? new List<string>();
+
         var uploadedPath = await SaveUploadedImageAsync(vm);
         if (uploadedPath is not null)
-            vm.Images = uploadedPath + "\n" + vm.Images;
+        {
+            // Delete old local image files that are being replaced.
+            DeleteOldImages(oldImages);
+            vm.Images = uploadedPath;
+        }
 
         var product = BuildProduct(vm, id);
         await _products.UpdateProductAsync(product);
@@ -219,6 +227,23 @@ public class AdminController : Controller
         await file.CopyToAsync(stream);
 
         return "/images/products/" + safeName;
+    }
+
+    /// <summary>
+    /// Deletes image files that live under wwwroot (i.e. paths starting with "/images/").
+    /// External URLs (http/https) are left untouched.
+    /// </summary>
+    private void DeleteOldImages(IEnumerable<string> imagePaths)
+    {
+        foreach (var path in imagePaths)
+        {
+            if (string.IsNullOrWhiteSpace(path)) continue;
+            if (path.StartsWith("http", StringComparison.OrdinalIgnoreCase)) continue;
+
+            var fullPath = Path.Combine(_env.WebRootPath, path.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
+            if (System.IO.File.Exists(fullPath))
+                System.IO.File.Delete(fullPath);
+        }
     }
 
     private static Product BuildProduct(AdminProductViewModel vm, string id)
