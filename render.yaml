@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: marwadi-ghee-sweets
+    runtime: docker
+    plan: free          # change to "starter" or higher for production
+    branch: main
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: PORT
+        generateValue: false   # Render sets PORT automatically; listed here for clarity

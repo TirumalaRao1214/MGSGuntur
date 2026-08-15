@@ -3,7 +3,10 @@ using MarwadiGheeSweetsWeb.Configuration;
 using MarwadiGheeSweetsWeb.Repositories;
 using MarwadiGheeSweetsWeb.Services;
 
+// Render injects PORT; bind to it so the health-check passes.
+var port = Environment.GetEnvironmentVariable("PORT") ?? "10000";
 var builder = WebApplication.CreateBuilder(args);
+builder.WebHost.UseUrls($"http://+:{port}");
 
 // ── Strongly-typed configuration ──────────────────────────────────────────────
 builder.Services.Configure<ShopSettings>(
@@ -39,10 +42,8 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
+    // HSTS / HTTPS-redirect are handled by Render's TLS termination proxy.
 }
-
-app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
