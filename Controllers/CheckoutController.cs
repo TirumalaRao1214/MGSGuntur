@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System.Text;
 using System.Text.Json;
 using MarwadiGheeSweetsWeb.Configuration;
 using MarwadiGheeSweetsWeb.DTOs;
@@ -14,17 +15,21 @@ public class CheckoutController : Controller
     private readonly IWhatsAppOrderService _whatsAppService;
     private readonly IProductService       _products;
     private readonly ShopSettings          _settings;
+    private readonly IConfiguration        _config;
     private readonly ILogger<CheckoutController> _logger;
+    private static readonly HttpClient _http = new();
 
     public CheckoutController(
         IWhatsAppOrderService whatsAppService,
         IProductService productService,
         IOptions<ShopSettings> settings,
+        IConfiguration config,
         ILogger<CheckoutController> logger)
     {
         _whatsAppService = whatsAppService;
         _products        = productService;
         _settings        = settings.Value;
+        _config          = config;
         _logger          = logger;
     }
 
@@ -41,8 +46,45 @@ public class CheckoutController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> PlaceOrder(
         [FromForm] CustomerDetails customer,
-        [FromForm] string cartJson)
+        [FromForm] string cartJson,
+        [FromForm] string otpToken)
     {
+        // ── OTP token server-side verification ───────────────────────────────
+        if (string.IsNullOrWhiteSpace(otpToken))
+        {
+            ModelState.AddModelError(string.Empty, "Phone number OTP verification is required.");
+        }
+        else
+        {
+            var authKey = _config["Msg91:AuthKey"];
+            try
+            {
+                var payload = JsonSerializer.Serialize(new
+                {
+                    authkey      = authKey,
+                    access_token = otpToken
+                });
+                using var content = new StringContent(payload, Encoding.UTF8, "application/json");
+                var resp = await _http.PostAsync(
+                    "https://api.msg91.com/api/v5/widget/verifyToken", content);
+                var body = await resp.Content.ReadAsStringAsync();
+                using var doc  = JsonDocument.Parse(body);
+                var type = doc.RootElement.TryGetProperty("type", out var t) ? t.GetString() : null;
+                if (type != "success")
+                {
+                    _logger.LogWarning("MSG91 OTP verification failed. Body: {Body}", body);
+                    ModelState.AddModelError(string.Empty,
+                        "Phone OTP verification failed. Please verify your number and try again.");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "MSG91 OTP verification error.");
+                ModelState.AddModelError(string.Empty,
+                    "OTP service error. Please try again.");
+            }
+        }
+
         // ── Conditional validation: address required for Delivery ─────────────
         if (customer.OrderType == "Delivery" &&
             string.IsNullOrWhiteSpace(customer.DeliveryAddress))
