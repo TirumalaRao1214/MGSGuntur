@@ -163,14 +163,13 @@ public class OwnerController : Controller
             return View("Users", vm2);
         }
 
-        var salt = PasswordHelper.GenerateSalt();
         var user = new AppUser
         {
             Username     = form.Username.Trim().ToLower(),
             DisplayName  = form.DisplayName.Trim(),
             Role         = form.Role,
-            Salt         = salt,
-            PasswordHash = PasswordHelper.HashPassword(salt, form.Password),
+            Salt         = string.Empty,
+            PasswordHash = PasswordHelper.HashPassword(form.Password),
             IsActive     = true
         };
         await _users.AddAsync(user);

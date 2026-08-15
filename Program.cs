@@ -44,6 +44,25 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     // HSTS / HTTPS-redirect are handled by Render's TLS termination proxy.
 }
+
+// ── Security headers ──────────────────────────────────────────────────────────
+app.Use(async (ctx, next) =>
+{
+    var headers = ctx.Response.Headers;
+    headers["X-Frame-Options"]        = "SAMEORIGIN";
+    headers["X-Content-Type-Options"] = "nosniff";
+    headers["Referrer-Policy"]        = "strict-origin-when-cross-origin";
+    headers["Permissions-Policy"]     = "geolocation=(), microphone=(), camera=()";
+    headers["Content-Security-Policy"] =
+        "default-src 'self'; " +
+        "script-src 'self' 'unsafe-inline'; " +   // unsafe-inline needed for Bootstrap/jQuery
+        "style-src 'self' 'unsafe-inline'; " +
+        "img-src 'self' data: https:; " +
+        "frame-src https://maps.google.com; " +
+        "connect-src 'self'";
+    await next();
+});
+
 app.UseStaticFiles();
 app.UseRouting();
 
