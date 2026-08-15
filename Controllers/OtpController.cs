@@ -41,13 +41,15 @@ public class OtpController : ControllerBase
         {
             var payload = JsonSerializer.Serialize(new
             {
-                authkey = authKey,
                 access_token = request.Token
             });
 
-            using var content = new StringContent(payload, Encoding.UTF8, "application/json");
-            var response = await _http.PostAsync(
-                "https://api.msg91.com/api/v5/widget/verifyToken", content);
+            using var reqMsg = new HttpRequestMessage(HttpMethod.Post,
+                "https://api.msg91.com/api/v5/widget/verifyToken");
+            reqMsg.Headers.Add("authkey", authKey);
+            reqMsg.Content = new StringContent(payload, Encoding.UTF8, "application/json");
+
+            var response = await _http.SendAsync(reqMsg);
 
             var body = await response.Content.ReadAsStringAsync();
             _logger.LogInformation("MSG91 verifyToken response: {Body}", body);

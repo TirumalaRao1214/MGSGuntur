@@ -61,12 +61,13 @@ public class CheckoutController : Controller
             {
                 var payload = JsonSerializer.Serialize(new
                 {
-                    authkey      = authKey,
                     access_token = otpToken
                 });
-                using var content = new StringContent(payload, Encoding.UTF8, "application/json");
-                var resp = await _http.PostAsync(
-                    "https://api.msg91.com/api/v5/widget/verifyToken", content);
+                using var reqMsg = new HttpRequestMessage(HttpMethod.Post,
+                    "https://api.msg91.com/api/v5/widget/verifyToken");
+                reqMsg.Headers.Add("authkey", authKey);
+                reqMsg.Content = new StringContent(payload, Encoding.UTF8, "application/json");
+                var resp = await _http.SendAsync(reqMsg);
                 var body = await resp.Content.ReadAsStringAsync();
                 using var doc  = JsonDocument.Parse(body);
                 var type = doc.RootElement.TryGetProperty("type", out var t) ? t.GetString() : null;
