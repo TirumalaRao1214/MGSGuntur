@@ -55,9 +55,9 @@ app.Use(async (ctx, next) =>
     headers["Permissions-Policy"]     = "geolocation=(), microphone=(), camera=()";
     headers["Content-Security-Policy"] =
         "default-src 'self'; " +
-        "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; " +
-        "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; " +
-        "font-src 'self' https://fonts.gstatic.com; " +
+        "script-src 'self' 'unsafe-inline'; " +
+        "style-src 'self' 'unsafe-inline'; " +
+        "font-src 'self'; " +
         "img-src 'self' data: https:; " +
         "frame-src https://maps.google.com https://www.google.com; " +
         "connect-src 'self'";
