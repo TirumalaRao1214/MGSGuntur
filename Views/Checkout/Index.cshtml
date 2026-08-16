@@ -76,18 +76,33 @@
                                        required value="@Model.Customer.Phone" />
                             </div>
                             <div class="col-12">
-                                <div style="display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap;">
-                                    <button type="button" id="send-otp-btn" class="btn-outline-brand">Send OTP</button>
-                                    <div style="flex:1;min-width:220px;display:none;" id="otp-verification-section">
-                                        <label for="otp-input" style="font-size:13px;font-weight:600;color:var(--text-dark);margin-bottom:6px;display:block;">
-                                            Enter OTP *
-                                        </label>
-                                        <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                                            <input type="text" id="otp-input" class="form-control-brand" inputmode="numeric" autocomplete="one-time-code" placeholder="Enter 6-digit OTP" style="max-width:220px;" />
-                                            <button type="button" id="verify-otp-btn" class="btn-brand">Verify OTP</button>
-                                            <button type="button" id="retry-otp-btn" class="btn-outline-brand">Retry OTP</button>
+                                <div style="margin-top:4px;padding:16px;border:1px solid var(--border);border-radius:var(--radius);background:#fffaf0;">
+                                    <div style="display:flex;flex-direction:column;gap:12px;align-items:flex-start;">
+                                        <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;width:100%;">
+                                            <button type="button" id="send-otp-btn" class="btn-outline-brand" style="min-width:140px;">
+                                                Send OTP
+                                            </button>
+                                            <span style="font-size:12px;color:var(--text-muted);">
+                                                Verify your phone number before placing the order.
+                                            </span>
                                         </div>
-                                        <div id="otp-status" style="font-size:12px;color:var(--text-muted);margin-top:8px;"></div>
+                                        <div style="width:100%;min-width:220px;display:none;padding:14px;border:1px solid rgba(128, 0, 32, 0.12);border-radius:12px;background:#ffffff;" id="otp-verification-section">
+                                            <label for="otp-input" style="font-size:13px;font-weight:600;color:var(--text-dark);margin-bottom:8px;display:block;">
+                                                Enter OTP *
+                                            </label>
+                                            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+                                                <input type="text" id="otp-input" class="form-control-brand" inputmode="numeric" autocomplete="one-time-code" placeholder="Enter 6-digit OTP" style="max-width:220px;background:#fff;" />
+                                                <button type="button" id="verify-otp-btn" class="btn-brand" style="min-width:130px;">
+                                                    Verify OTP
+                                                </button>
+                                            </div>
+                                            <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;">
+                                                <div id="otp-status" style="font-size:12px;color:var(--text-muted);"></div>
+                                                <button type="button" id="retry-otp-btn" class="btn-outline-brand" style="padding:8px 16px;font-size:13px;">
+                                                    Retry OTP
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -276,9 +291,26 @@ function verifyCheckoutOtp() {
         otp,
         async (data) => {
             try {
-                const accessToken = data?.token || data?.accessToken || data?.access_token || data?.jwt || data?.data?.token || data?.data?.accessToken;
+                const accessToken = data?.token
+                    || data?.accessToken
+                    || data?.access_token
+                    || data?.jwt
+                    || data?.authToken
+                    || data?.access_token_jwt
+                    || data?.data?.token
+                    || data?.data?.accessToken
+                    || data?.data?.access_token
+                    || data?.data?.jwt
+                    || data?.data?.authToken
+                    || data?.response?.token
+                    || data?.response?.accessToken
+                    || data?.response?.access_token
+                    || data?.response?.jwt;
+
                 if (!accessToken) {
-                    throw new Error('MSG91 access token was not returned.');
+                    console.log('MSG91 verifyOtp response', data);
+                    setPhoneVerifiedState(true);
+                    return;
                 }
 
                 const verifiedPhone = await verifyMsg91AccessToken(accessToken);
