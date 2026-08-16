@@ -209,17 +209,29 @@ function setOtpStatus(message, isError = false) {
 }
 
 function setPhoneVerifiedState(isVerified) {
+    const sendOtpButton = document.getElementById('send-otp-btn');
+    const otpInput = document.getElementById('otp-input');
+    const retryOtpButton = document.getElementById('retry-otp-btn');
+    const verifyOtpButton = document.getElementById('verify-otp-btn');
+
     isPhoneVerified = isVerified;
     document.getElementById('customer-phone').readOnly = isVerified;
-    document.getElementById('send-otp-btn').disabled = isVerified;
+    sendOtpButton.disabled = isVerified;
+    sendOtpButton.style.display = isVerified ? 'none' : 'inline-flex';
 
     if (isVerified) {
-        otpSectionElement().style.display = 'none';
-        setOtpStatus('Phone number verified successfully.');
+        otpInput.disabled = true;
+        retryOtpButton.disabled = true;
+        verifyOtpButton.disabled = true;
+        otpSectionElement().style.display = 'block';
+        setOtpStatus('Phone number verified successfully. You can now place your order on WhatsApp.');
         return;
     }
 
     verifiedAccessToken = '';
+    otpInput.disabled = false;
+    retryOtpButton.disabled = false;
+    verifyOtpButton.disabled = false;
     document.getElementById('otp-input').value = '';
 }
 
@@ -251,6 +263,7 @@ function sendCheckoutOtp() {
         (data) => {
             otpRequestIdElement().value = getOtpRequestId(data);
             otpSectionElement().style.display = 'block';
+            document.getElementById('otp-input').focus();
             setOtpStatus('OTP sent successfully.');
         },
         (error) => {
