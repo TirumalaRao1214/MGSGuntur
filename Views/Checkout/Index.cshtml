@@ -5,6 +5,8 @@
 @{
     ViewBag.Title = "Checkout";
     var settings = ShopOptions.Value;
+    var msg91AuthKey = System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(settings.Msg91AuthKey);
+    var msg91WidgetId = System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(settings.Msg91WidgetId);
 }
 
 <nav class="page-breadcrumb" aria-label="Breadcrumb">
@@ -25,6 +27,7 @@
         <form id="checkout-form" action="/Checkout/PlaceOrder" method="post">
             @Html.AntiForgeryToken()
             <input type="hidden" name="cartJson" id="cart-json-input" value="" />
+            <input type="hidden" id="otp-request-id" value="" />
 
             <div class="row g-4">
                 <!-- ── Customer Details ────────────────────────────────── -->
@@ -71,6 +74,22 @@
                                 <input type="tel" id="customer-phone" name="Customer.Phone"
                                        class="form-control-brand" placeholder="+91 98765 43210"
                                        required value="@Model.Customer.Phone" />
+                            </div>
+                            <div class="col-12">
+                                <div style="display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap;">
+                                    <button type="button" id="send-otp-btn" class="btn-outline-brand">Send OTP</button>
+                                    <div style="flex:1;min-width:220px;display:none;" id="otp-verification-section">
+                                        <label for="otp-input" style="font-size:13px;font-weight:600;color:var(--text-dark);margin-bottom:6px;display:block;">
+                                            Enter OTP *
+                                        </label>
+                                        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                                            <input type="text" id="otp-input" class="form-control-brand" inputmode="numeric" autocomplete="one-time-code" placeholder="Enter 6-digit OTP" style="max-width:220px;" />
+                                            <button type="button" id="verify-otp-btn" class="btn-brand">Verify OTP</button>
+                                            <button type="button" id="retry-otp-btn" class="btn-outline-brand">Retry OTP</button>
+                                        </div>
+                                        <div id="otp-status" style="font-size:12px;color:var(--text-muted);margin-top:8px;"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -146,39 +165,203 @@
 </section>
 
 @section Scripts {
-<script>
-const FREE_THRESHOLD  = @settings.FreeShippingThreshold;
+<script type="text/javascript">
+const FREE_THRESHOLD = @settings.FreeShippingThreshold;
 const DELIVERY_CHARGE = @settings.DeliveryCharge;
+let isPhoneVerified = false;
+let verifiedAccessToken = '';
+
+function otpStatusElement() {
+    return document.getElementById('otp-status');
+}
+
+function otpSectionElement() {
+    return document.getElementById('otp-verification-section');
+}
+
+function otpRequestIdElement() {
+    return document.getElementById('otp-request-id');
+}
+
+function setOtpStatus(message, isError = false) {
+    const status = otpStatusElement();
+    if (!status) {
+        return;
+    }
+
+    status.textContent = message;
+    status.style.color = isError ? '#b42318' : 'var(--text-muted)';
+}
+
+function setPhoneVerifiedState(isVerified) {
+    isPhoneVerified = isVerified;
+    document.getElementById('customer-phone').readOnly = isVerified;
+    document.getElementById('send-otp-btn').disabled = isVerified;
+
+    if (isVerified) {
+        otpSectionElement().style.display = 'none';
+        setOtpStatus('Phone number verified successfully.');
+        return;
+    }
+
+    verifiedAccessToken = '';
+    document.getElementById('otp-input').value = '';
+}
+
+function getOtpIdentifier() {
+    const phone = document.getElementById('customer-phone').value.replace(/\D/g, '');
+    return phone.length === 10 ? `91${phone}` : phone;
+}
+
+function getOtpRequestId(data) {
+    return data?.reqId || data?.request_id || data?.requestId || data?.data?.reqId || '';
+}
+
+function sendCheckoutOtp() {
+    if (typeof window.sendOtp !== 'function') {
+        setOtpStatus('OTP service is not available right now.', true);
+        return;
+    }
+
+    const identifier = getOtpIdentifier();
+    if (!identifier || identifier.length < 12) {
+        setOtpStatus('Enter a valid phone number with country code.', true);
+        return;
+    }
+
+    setPhoneVerifiedState(false);
+    setOtpStatus('Sending OTP...');
+    window.sendOtp(
+        identifier,
+        (data) => {
+            otpRequestIdElement().value = getOtpRequestId(data);
+            otpSectionElement().style.display = 'block';
+            setOtpStatus('OTP sent successfully.');
+        },
+        (error) => {
+            setOtpStatus(error?.message || 'Failed to send OTP.', true);
+        }
+    );
+}
+
+function retryCheckoutOtp() {
+    if (typeof window.retryOtp !== 'function') {
+        setOtpStatus('OTP retry is not available right now.', true);
+        return;
+    }
+
+    setOtpStatus('Retrying OTP...');
+    window.retryOtp(
+        null,
+        () => setOtpStatus('OTP resent successfully.'),
+        (error) => setOtpStatus(error?.message || 'Failed to resend OTP.', true),
+        otpRequestIdElement().value || undefined
+    );
+}
+
+function verifyCheckoutOtp() {
+    if (typeof window.verifyOtp !== 'function') {
+        setOtpStatus('OTP verification is not available right now.', true);
+        return;
+    }
+
+    const otp = document.getElementById('otp-input').value.trim();
+    if (!otp) {
+        setOtpStatus('Enter the OTP sent to your phone.', true);
+        return;
+    }
+
+    setOtpStatus('Verifying OTP...');
+    window.verifyOtp(
+        otp,
+        async (data) => {
+            try {
+                const accessToken = data?.token || data?.accessToken || data?.access_token || data?.jwt || data?.data?.token || data?.data?.accessToken;
+                if (!accessToken) {
+                    throw new Error('MSG91 access token was not returned.');
+                }
+
+                const verifiedPhone = await verifyMsg91AccessToken(accessToken);
+                if (verifiedPhone !== getOtpIdentifier()) {
+                    throw new Error('Verified phone number does not match the entered phone number.');
+                }
+
+                verifiedAccessToken = accessToken;
+                setPhoneVerifiedState(true);
+            } catch (error) {
+                setPhoneVerifiedState(false);
+                setOtpStatus(error?.message || 'Access token verification failed.', true);
+            }
+        },
+        (error) => {
+            setOtpStatus(error?.message || 'Invalid OTP. Please try again.', true);
+        },
+        otpRequestIdElement().value || undefined
+    );
+}
+
+async function verifyMsg91AccessToken(accessToken) {
+    const response = await fetch('/Checkout/VerifyMsg91AccessToken', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+            accessToken,
+            phone: document.getElementById('customer-phone').value
+        })
+    });
+
+    const result = await response.json();
+    if (!response.ok || !result.success) {
+        throw new Error(result.message || 'Access token verification failed.');
+    }
+
+    return result.verifiedPhone || '';
+}
+
+var configuration = {
+    widgetId: '@msg91WidgetId',
+    tokenAuth: '@msg91AuthKey',
+    identifier: '',
+    exposeMethods: true,
+    captchaRenderId: '',
+    success: function () { },
+    failure: function (error) {
+        if (!isPhoneVerified) {
+            setOtpStatus(error?.message || 'OTP action failed.', true);
+        }
+    }
+};
 
 function setOrderType(type) {
     document.getElementById('order-type-input').value = type;
-    document.getElementById('btn-pickup').classList.toggle('active',    type === 'Pickup');
-    document.getElementById('btn-delivery').classList.toggle('active',  type === 'Delivery');
+    document.getElementById('btn-pickup').classList.toggle('active', type === 'Pickup');
+    document.getElementById('btn-delivery').classList.toggle('active', type === 'Delivery');
     document.getElementById('delivery-address-section').style.display = type === 'Delivery' ? 'block' : 'none';
     renderCheckoutSummary();
 }
 
 function renderCheckoutSummary() {
-    const items     = Cart.get();
+    const items = Cart.get();
     const orderType = document.getElementById('order-type-input').value;
-    const sub       = items.reduce((s,i) => s + i.price * i.quantity, 0);
-    const delivery  = (orderType === 'Pickup') ? 0 : Cart.deliveryCharge(FREE_THRESHOLD, DELIVERY_CHARGE);
-    const total     = sub + delivery;
+    const sub = items.reduce((s, i) => s + i.price * i.quantity, 0);
+    const delivery = orderType === 'Pickup' ? 0 : Cart.deliveryCharge(FREE_THRESHOLD, DELIVERY_CHARGE);
+    const total = sub + delivery;
 
-    // Inject cart JSON for form submission
     document.getElementById('cart-json-input').value = JSON.stringify(
         items.map(i => ({
-            ProductId:   i.productId,
+            ProductId: i.productId,
             ProductSlug: i.productSlug,
             ProductName: i.productName,
-            ImageUrl:    i.imageUrl,
+            ImageUrl: i.imageUrl,
             WeightLabel: i.weightLabel,
-            Price:       i.price,
-            Quantity:    i.quantity
+            Price: i.price,
+            Quantity: i.quantity
         }))
     );
 
-    // Items list
     const listEl = document.getElementById('checkout-items-list');
     if (items.length === 0) {
         listEl.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted);">Your cart is empty. <a href="/sweets">Browse Sweets</a></div>';
@@ -194,7 +377,7 @@ function renderCheckoutSummary() {
     }
 
     document.getElementById('co-subtotal').textContent = '₹' + sub.toFixed(0);
-    document.getElementById('co-delivery').innerHTML   = delivery > 0
+    document.getElementById('co-delivery').innerHTML = delivery > 0
         ? '₹' + delivery.toFixed(0)
         : '<span style="color:green;font-weight:700;">FREE</span>';
     document.getElementById('co-total').textContent = '₹' + total.toFixed(0);
@@ -203,6 +386,17 @@ function renderCheckoutSummary() {
 document.addEventListener('DOMContentLoaded', () => {
     renderCheckoutSummary();
 
+    document.getElementById('customer-phone').addEventListener('input', () => {
+        otpRequestIdElement().value = '';
+        otpSectionElement().style.display = 'none';
+        setPhoneVerifiedState(false);
+        setOtpStatus('');
+    });
+
+    document.getElementById('send-otp-btn').addEventListener('click', sendCheckoutOtp);
+    document.getElementById('retry-otp-btn').addEventListener('click', retryCheckoutOtp);
+    document.getElementById('verify-otp-btn').addEventListener('click', verifyCheckoutOtp);
+
     document.getElementById('checkout-form').addEventListener('submit', (e) => {
         const items = Cart.get();
         if (items.length === 0) {
@@ -210,15 +404,24 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Your cart is empty! Please add some sweets before checking out.');
             return;
         }
-        const name  = document.getElementById('customer-name').value.trim();
+
+        const name = document.getElementById('customer-name').value.trim();
         const phone = document.getElementById('customer-phone').value.trim();
         if (!name || !phone) {
             e.preventDefault();
             alert('Please enter your name and phone number.');
             return;
         }
-        renderCheckoutSummary(); // Ensure cart JSON is up-to-date
+
+        if (!isPhoneVerified) {
+            e.preventDefault();
+            setOtpStatus('Please verify your phone number before placing the order.', true);
+            return;
+        }
+
+        renderCheckoutSummary();
     });
 });
 </script>
+<script type="text/javascript" src="https://verify.msg91.com/otp-provider.js" onload="initSendOTP(configuration)"></script>
 }

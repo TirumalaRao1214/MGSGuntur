@@ -33,6 +33,7 @@ builder.Services.AddSingleton<IUserRepository,     JsonUserRepository>();
 builder.Services.AddScoped<IProductService,       ProductService>();
 builder.Services.AddScoped<ICategoryService,      CategoryService>();
 builder.Services.AddScoped<IWhatsAppOrderService, WhatsAppOrderService>();
+builder.Services.AddSession();
 
 // ── MVC ───────────────────────────────────────────────────────────────────────
 builder.Services.AddControllersWithViews();
@@ -66,6 +67,7 @@ app.Use(async (ctx, next) =>
 
 app.UseStaticFiles();
 app.UseRouting();
+app.UseSession();
 
 app.UseAuthentication();
 app.UseAuthorization();

@@ -23,4 +23,6 @@ public class ShopSettings
     public string Currency { get; set; } = "₹";
     public double Rating { get; set; }
     public int ReviewCount { get; set; }
+    public string Msg91AuthKey { get; set; } = string.Empty;
+    public string Msg91WidgetId { get; set; } = string.Empty;
 }

@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Text.Json;
 using MarwadiGheeSweetsWeb.Configuration;
 using MarwadiGheeSweetsWeb.DTOs;
@@ -43,6 +45,13 @@ public class CheckoutController : Controller
         [FromForm] CustomerDetails customer,
         [FromForm] string cartJson)
     {
+        var normalizedPhone = NormalizePhoneNumber(customer.Phone);
+        var sessionVerifiedPhone = HttpContext.Session.GetString("VerifiedPhone");
+        if (string.IsNullOrWhiteSpace(normalizedPhone) || !string.Equals(normalizedPhone, sessionVerifiedPhone, StringComparison.Ordinal))
+        {
+            ModelState.AddModelError(nameof(customer.Phone), "Please verify your phone number before placing the order.");
+        }
+
         // ── Conditional validation: address required for Delivery ─────────────
         if (customer.OrderType == "Delivery" &&
             string.IsNullOrWhiteSpace(customer.DeliveryAddress))
@@ -189,7 +198,71 @@ public class CheckoutController : Controller
             }).ToList()
         };
 
+        HttpContext.Session.Remove("VerifiedPhone");
+
         var whatsAppUrl = _whatsAppService.BuildWhatsAppUrl(dto, _settings.WhatsAppNumber);
         return Redirect(whatsAppUrl);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> VerifyMsg91AccessToken([FromBody] Msg91AccessTokenRequest request)
+    {
+        var normalizedPhone = NormalizePhoneNumber(request.Phone);
+        if (string.IsNullOrWhiteSpace(request.AccessToken))
+        {
+            return BadRequest(new { success = false, message = "Access token is required." });
+        }
+
+        if (string.IsNullOrWhiteSpace(normalizedPhone))
+        {
+            return BadRequest(new { success = false, message = "Phone number is required." });
+        }
+
+        using var httpClient = new HttpClient();
+        using var httpRequest = new HttpRequestMessage(HttpMethod.Post, "https://control.msg91.com/api/v5/widget/verifyAccessToken")
+        {
+            Content = new StringContent(
+                JsonSerializer.Serialize(new Dictionary<string, string>
+                {
+                    ["authkey"] = _settings.Msg91AuthKey,
+                    ["access-token"] = request.AccessToken
+                }),
+                Encoding.UTF8,
+                "application/json")
+        };
+
+        httpRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+        using var response = await httpClient.SendAsync(httpRequest);
+        var responseBody = await response.Content.ReadAsStringAsync();
+
+        if (!response.IsSuccessStatusCode)
+        {
+            return StatusCode((int)response.StatusCode, new { success = false, message = responseBody });
+        }
+
+        using var document = JsonDocument.Parse(responseBody);
+        var root = document.RootElement;
+        var isSuccess = root.TryGetProperty("type", out var typeElement)
+            && string.Equals(typeElement.GetString(), "success", StringComparison.OrdinalIgnoreCase);
+
+        if (!isSuccess)
+        {
+            return BadRequest(new { success = false, message = responseBody });
+        }
+
+        HttpContext.Session.SetString("VerifiedPhone", normalizedPhone);
+        return Ok(new { success = true, verifiedPhone = normalizedPhone });
+    }
+
+    private static string NormalizePhoneNumber(string? phone)
+    {
+        if (string.IsNullOrWhiteSpace(phone))
+        {
+            return string.Empty;
+        }
+
+        var digits = new string(phone.Where(char.IsDigit).ToArray());
+        return digits.Length == 10 ? $"91{digits}" : digits;
     }
 }
