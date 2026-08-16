@@ -98,7 +98,7 @@
                                             </div>
                                             <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;">
                                                 <div id="otp-status" style="font-size:12px;color:var(--text-muted);"></div>
-                                                <button type="button" id="retry-otp-btn" class="btn-outline-brand" style="padding:8px 16px;font-size:13px;">
+                                                <button type="button" id="retry-otp-btn" class="btn-outline-brand" style="display:none;padding:8px 16px;font-size:13px;">
                                                     Retry OTP
                                                 </button>
                                             </div>
@@ -206,6 +206,7 @@ function setOtpStatus(message, isError = false) {
 
     status.textContent = message;
     status.style.color = isError ? '#b42318' : 'var(--text-muted)';
+    document.getElementById('retry-otp-btn').style.display = isError ? 'inline-flex' : 'none';
 }
 
 function setPhoneVerifiedState(isVerified) {
@@ -455,12 +456,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!name || !phone) {
             e.preventDefault();
             alert('Please enter your name and phone number.');
-            return;
-        }
-
-        if (!isPhoneVerified) {
-            e.preventDefault();
-            setOtpStatus('Please verify your phone number before placing the order.', true);
             return;
         }
 
