@@ -7,6 +7,7 @@
     var settings = ShopOptions.Value;
     var msg91AuthKey = System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(settings.Msg91AuthKey);
     var msg91WidgetId = System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(settings.Msg91WidgetId);
+    var phoneVerificationError = ViewBag.PhoneVerificationError as string;
 }
 
 <nav class="page-breadcrumb" aria-label="Breadcrumb">
@@ -103,6 +104,10 @@
                                                 </button>
                                             </div>
                                         </div>
+                                        @if (!string.IsNullOrWhiteSpace(phoneVerificationError))
+                                        {
+                                            <div style="font-size:12px;color:#b42318;">@phoneVerificationError</div>
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -323,8 +328,7 @@ function verifyCheckoutOtp() {
 
                 if (!accessToken) {
                     console.log('MSG91 verifyOtp response', data);
-                    setPhoneVerifiedState(true);
-                    return;
+                    throw new Error('OTP verified, but secure verification token was not returned. Please resend OTP and try again.');
                 }
 
                 const verifiedPhone = await verifyMsg91AccessToken(accessToken);
@@ -431,6 +435,11 @@ function renderCheckoutSummary() {
 
 document.addEventListener('DOMContentLoaded', () => {
     renderCheckoutSummary();
+
+    if (@(!string.IsNullOrWhiteSpace(phoneVerificationError) ? "true" : "false")) {
+        otpSectionElement().style.display = 'block';
+        setOtpStatus('@System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(phoneVerificationError ?? string.Empty)', true);
+    }
 
     document.getElementById('customer-phone').addEventListener('input', () => {
         otpRequestIdElement().value = '';
