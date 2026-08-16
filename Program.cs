@@ -61,7 +61,7 @@ app.Use(async (ctx, next) =>
         "font-src 'self'; " +
         "img-src 'self' data: https:; " +
         "frame-src https://maps.google.com https://www.google.com https://hcaptcha.com https://*.hcaptcha.com; " +
-        "connect-src 'self' https://api.msg91.com https://verify.msg91.com https://control.msg91.com https://pass.hustnsoft.com https://pass.hostnsoft.com https://hcaptcha.com https://*.hcaptcha.com";
+        "connect-src 'self' https://api.msg91.com https://verify.msg91.com https://control.msg91.com https://pass.hustnsoft.com https://pass.hostnsoft.com https://passbknd.hostnsoft.com https://hcaptcha.com https://*.hcaptcha.com";
     await next();
 });
 

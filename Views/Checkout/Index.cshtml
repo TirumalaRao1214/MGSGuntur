@@ -252,7 +252,7 @@ function retryCheckoutOtp() {
 
     setOtpStatus('Retrying OTP...');
     window.retryOtp(
-        null,
+        '11',
         () => setOtpStatus('OTP resent successfully.'),
         (error) => setOtpStatus(error?.message || 'Failed to resend OTP.', true),
         otpRequestIdElement().value || undefined
