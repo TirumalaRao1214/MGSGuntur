@@ -56,12 +56,12 @@ app.Use(async (ctx, next) =>
     headers["Permissions-Policy"]     = "geolocation=(), microphone=(), camera=()";
     headers["Content-Security-Policy"] =
         "default-src 'self'; " +
-        "script-src 'self' 'unsafe-inline' https://verify.msg91.com https://pass.hustnsoft.com; " +
+        "script-src 'self' 'unsafe-inline' https://verify.msg91.com https://pass.hustnsoft.com https://pass.hostnsoft.com https://hcaptcha.com https://*.hcaptcha.com; " +
         "style-src 'self' 'unsafe-inline'; " +
         "font-src 'self'; " +
         "img-src 'self' data: https:; " +
-        "frame-src https://maps.google.com https://www.google.com; " +
-        "connect-src 'self' https://api.msg91.com https://verify.msg91.com https://control.msg91.com https://pass.hustnsoft.com";
+        "frame-src https://maps.google.com https://www.google.com https://hcaptcha.com https://*.hcaptcha.com; " +
+        "connect-src 'self' https://api.msg91.com https://verify.msg91.com https://control.msg91.com https://pass.hustnsoft.com https://pass.hostnsoft.com https://hcaptcha.com https://*.hcaptcha.com";
     await next();
 });
 
