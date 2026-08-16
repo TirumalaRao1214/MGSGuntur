@@ -312,17 +312,20 @@ function verifyCheckoutOtp() {
             try {
                 const accessToken = typeof data === 'string'
                     ? data
-                    : data?.token
+                    : data?.message
+                    || data?.token
                     || data?.accessToken
                     || data?.access_token
                     || data?.jwt
                     || data?.authToken
                     || data?.access_token_jwt
+                    || data?.data?.message
                     || data?.data?.token
                     || data?.data?.accessToken
                     || data?.data?.access_token
                     || data?.data?.jwt
                     || data?.data?.authToken
+                    || data?.response?.message
                     || data?.response?.token
                     || data?.response?.accessToken
                     || data?.response?.access_token
