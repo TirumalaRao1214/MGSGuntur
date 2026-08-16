@@ -310,7 +310,9 @@ function verifyCheckoutOtp() {
         otp,
         async (data) => {
             try {
-                const accessToken = data?.token
+                const accessToken = typeof data === 'string'
+                    ? data
+                    : data?.token
                     || data?.accessToken
                     || data?.access_token
                     || data?.jwt
