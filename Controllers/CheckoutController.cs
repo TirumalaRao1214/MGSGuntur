@@ -65,6 +65,7 @@ public class CheckoutController : Controller
             ViewBag.Settings              = _settings;
             ViewBag.FreeShippingThreshold = _settings.FreeShippingThreshold;
             ViewBag.DeliveryCharge        = _settings.DeliveryCharge;
+            ViewBag.PhoneVerificationError = ModelState[nameof(customer.Phone)]?.Errors.FirstOrDefault()?.ErrorMessage;
             return View("Index", new CheckoutViewModel
             {
                 Customer              = customer,
