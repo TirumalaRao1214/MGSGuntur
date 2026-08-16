@@ -2,11 +2,9 @@
 @using MarwadiGheeSweetsWeb.Configuration
 @using Microsoft.Extensions.Options
 @inject IOptions<ShopSettings> ShopOptions
-@inject Microsoft.Extensions.Configuration.IConfiguration Config
 @{
     ViewBag.Title = "Checkout";
     var settings = ShopOptions.Value;
-    var msg91WidgetId = Config["Msg91:WidgetId"];
 }
 
 <nav class="page-breadcrumb" aria-label="Breadcrumb">
@@ -26,8 +24,7 @@
 
         <form id="checkout-form" action="/Checkout/PlaceOrder" method="post">
             @Html.AntiForgeryToken()
-            <input type="hidden" name="cartJson"  id="cart-json-input" value="" />
-            <input type="hidden" name="OtpToken"  id="otp-token-input" value="" />
+            <input type="hidden" name="cartJson" id="cart-json-input" value="" />
 
             <div class="row g-4">
                 <!-- ── Customer Details ────────────────────────────────── -->
@@ -71,18 +68,9 @@
                                 <label for="customer-phone" style="font-size:13px;font-weight:600;color:var(--text-dark);margin-bottom:6px;display:block;">
                                     Phone Number *
                                 </label>
-                                <div style="display:flex;gap:8px;align-items:flex-start;">
-                                    <input type="tel" id="customer-phone" name="Customer.Phone"
-                                           class="form-control-brand" placeholder="+91 98765 43210"
-                                           required value="@Model.Customer.Phone"
-                                           style="flex:1;" />
-                                    <button type="button" id="verify-otp-btn"
-                                            onclick="startOtpVerification()"
-                                            style="white-space:nowrap;padding:10px 14px;background:var(--burgundy);color:#fff;border:none;border-radius:var(--radius);font-size:13px;font-weight:600;cursor:pointer;">
-                                        Verify OTP
-                                    </button>
-                                </div>
-                                <div id="otp-status" style="font-size:12px;margin-top:6px;"></div>
+                                <input type="tel" id="customer-phone" name="Customer.Phone"
+                                       class="form-control-brand" placeholder="+91 98765 43210"
+                                       required value="@Model.Customer.Phone" />
                             </div>
                         </div>
                     </div>
@@ -138,14 +126,10 @@
                                 Tap below → WhatsApp opens with your order pre-filled → Hit Send ✅
                             </div>
                             <button type="submit" id="place-order-btn"
-                                    class="btn-whatsapp" style="width:100%;justify-content:center;font-size:16px;padding:14px;border:none;opacity:.45;cursor:not-allowed;"
-                                    disabled>
+                                    class="btn-whatsapp" style="width:100%;justify-content:center;font-size:16px;padding:14px;border:none;">
                                 <i class="bi bi-whatsapp" style="font-size:20px;"></i>
                                 Place Order on WhatsApp
                             </button>
-                            <div style="font-size:11px;color:var(--text-muted);text-align:center;margin-top:6px;" id="otp-gate-hint">
-                                ⚠️ Please verify your phone number first.
-                            </div>
                         </div>
 
                         <!-- Store Info -->
@@ -162,82 +146,9 @@
 </section>
 
 @section Scripts {
-<!-- MSG91 OTP Widget -->
-<script src="https://verify.msg91.com/otp-provider.js"></script>
 <script>
 const FREE_THRESHOLD  = @settings.FreeShippingThreshold;
 const DELIVERY_CHARGE = @settings.DeliveryCharge;
-const MSG91_WIDGET_ID = '@msg91WidgetId';
-
-let otpVerified = false;
-
-function startOtpVerification() {
-    const phone = document.getElementById('customer-phone').value.trim();
-    if (!phone) {
-        alert('Please enter your phone number first.');
-        return;
-    }
-
-    // Strip any non-digit chars; prepend 91 if needed
-    const digits = phone.replace(/\D/g, '');
-    const mobile = digits.startsWith('91') && digits.length === 12 ? digits : '91' + digits.replace(/^0+/, '');
-
-    const configuration = {
-        widgetId: MSG91_WIDGET_ID,
-        tokenAuth: '560992Ti5JyMVoN6a80969aP1',
-        exposeMethods: true,
-        success: (data) => {
-            // data.message holds the verification token
-            const token = data && (data.message || data.token || '');
-            document.getElementById('otp-token-input').value = token;
-            // Verify server-side
-            fetch('/otp/verify-token', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ token })
-            })
-            .then(r => r.json())
-            .then(result => {
-                if (result.success) {
-                    otpVerified = true;
-                    setOtpStatus('✅ Phone verified!', 'green');
-                    enableSubmitButton();
-                } else {
-                    otpVerified = false;
-                    setOtpStatus('❌ Verification failed. Try again.', 'red');
-                }
-            })
-            .catch(() => {
-                otpVerified = false;
-                setOtpStatus('❌ Verification error. Try again.', 'red');
-            });
-        },
-        failure: (err) => {
-            setOtpStatus('❌ OTP failed. Please retry.', 'red');
-        }
-    };
-
-    if (typeof initSendOTP === 'function') {
-        initSendOTP(configuration);
-    } else {
-        setOtpStatus('⚠️ OTP widget not loaded. Please refresh the page.', 'orange');
-    }
-}
-
-function setOtpStatus(msg, color) {
-    const el = document.getElementById('otp-status');
-    el.textContent = msg;
-    el.style.color = color;
-}
-
-function enableSubmitButton() {
-    const btn = document.getElementById('place-order-btn');
-    const hint = document.getElementById('otp-gate-hint');
-    btn.disabled = false;
-    btn.style.opacity = '1';
-    btn.style.cursor  = 'pointer';
-    if (hint) hint.style.display = 'none';
-}
 
 function setOrderType(type) {
     document.getElementById('order-type-input').value = type;
@@ -304,11 +215,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!name || !phone) {
             e.preventDefault();
             alert('Please enter your name and phone number.');
-            return;
-        }
-        if (!otpVerified || !document.getElementById('otp-token-input').value) {
-            e.preventDefault();
-            alert('Please verify your phone number with OTP before placing the order.');
             return;
         }
         renderCheckoutSummary(); // Ensure cart JSON is up-to-date
