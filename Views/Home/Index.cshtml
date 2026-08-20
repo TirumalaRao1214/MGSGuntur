@@ -15,6 +15,7 @@
             <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
             <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
             <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+             <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
         </div>
         <div class="carousel-inner">
             <!-- Slide 1 -->
@@ -92,6 +93,35 @@
                                 </a>
                                 <a href="/#bulk-orders" class="btn-outline-brand" style="border-color:rgba(255,255,255,.5);color:white;">
                                     Bulk / Corporate Orders
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Slide 4 – Video -->
+            <div class="carousel-item">
+                <div class="hero-slide" style="position:relative;">
+                    <video autoplay muted loop playsinline
+                           style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;">
+                        <source src="@Url.Content("~/videos/gulab-jamun.mp4")" type="video/mp4">
+                    </video>
+                    <div class="hero-overlay" style="z-index:1;"></div>
+                    <div class="container" style="position:relative;z-index:2;">
+                        <div class="hero-content">
+                            <div class="hero-badge">🍮 Watch It Spin</div>
+                            <h1 class="hero-title">
+                                Our Famous<br><span class="highlight">Gulab Jamun</span>
+                            </h1>
+                            <p class="hero-desc">
+                                Soft, golden, soaked in rose syrup — handcrafted fresh every day in our kitchen.
+                            </p>
+                            <div class="hero-cta">
+                                <a href="/sweets" class="btn-primary-brand">
+                                    <i class="bi bi-grid-fill"></i> Shop All Sweets
+                                </a>
+                                <a href="https://wa.me/@settings.WhatsAppNumber" target="_blank" rel="noopener" class="btn-whatsapp">
+                                    <i class="bi bi-whatsapp"></i> Order on WhatsApp
                                 </a>
                             </div>
                         </div>
